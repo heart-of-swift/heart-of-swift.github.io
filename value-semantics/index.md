@@ -4,8 +4,8 @@ title: Value Semantics
 ---
 
 - Value Semantics とは
-- [Value Semantics を持たない場合の問題と対処法](problems-without-value-semantics.html)
-- [値型の使い方](how-to-use-value-types.html)
+- Value Semantics を持たない場合の問題と対処法 (Coming soon)
+- 値型の使い方 (Coming soon)
 
 ## Value Semantics とは
 
@@ -217,4 +217,4 @@ _Value Semantics_ を持つかどうかをパターンに当てはめて考え�
 
 ---
 
-- 次のページ: [Value Semantics を持たない場合の問題と対処法](problems-without-value-semantics.html)
+- 次のページ: Value Semantics を持たない場合の問題と対処法 (Coming soon)
