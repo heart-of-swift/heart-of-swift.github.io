@@ -65,19 +65,7 @@ _参照型_ のインスタンスは変数に直接格納されません。イ�
 
 この例では変更に対する独立性を持たないので、 `Foo` は _Value Semantics_ を持ちません。 
 
-### Reference Semantics
-
-先の `class Foo` のようなケースは、 _Value Semantics_ と対比して、 **_Reference Semantics_** を持っていると言われます。
-
-"Value Semantics in Swift" には、 _Reference Semantics_ の定義が次のように書かれています。
-
-> TODO
->
-> "Value Semantics in Swift", https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst
->
-> （参考訳） TODO
-
-TODO
+このように、片一方を変更するともう一方にも影響を与えるケースは、 _Value Semantics_ と対比して、 **_Reference Semantics_** を持っていると言われます。
 
 ### Semantics vs Type
 
@@ -213,7 +201,7 @@ class Bar {
 }
 ```
 
-しかし、そのようにパターンで判断するのは危険です。たとえば、標準ライブラリの `Array` は内部にミュータブルな _参照型_ を保持していますが、 **_Copy-on-Write_** という仕組みを使って _Value Semantics_ を実現しています。
+しかし、そのようにパターンで判断するのは危険です。たとえば、標準ライブラリの `Array` は内部にミュータブルな _参照型_ を保持していますが、 _Copy-on-Write_ という仕組みを使って _Value Semantics_ を実現しています。
 
 _Value Semantics_ を持つかどうかはパターンで判断するのではなく、定義に基づいて判断することが大切です。
 
