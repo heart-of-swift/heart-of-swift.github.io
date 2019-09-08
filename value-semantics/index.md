@@ -3,6 +3,10 @@ layout: page
 title: Value Semantics
 ---
 
+- Value Semantics とは
+- [Value Semantics を持たない場合の問題と対処法](problems-without-value-semantics.html)
+- [値型の使い方](how-to-use-value-types.html)
+
 ## Value Semantics とは
 
 Swift における **_Value Semantics_** については WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) で詳しく説明されていますが、残念ながらその中では _Value Semantics_ の定義については述べられていません。 Swift における _Value Semantics_ の定義は、 swift リポジトリの中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) に記載されています。
@@ -210,3 +214,7 @@ _Value Semantics_ を持つかどうかはパターンで判断するのでは�
 _値型_ だからといって _Value Semantics_ を持つとは限りませんし、 _参照型_ でも _Value Semantics_ を持つこともあります。 Type と Semantics を区別して理解することが重要です。
 
 _Value Semantics_ を持つかどうかをパターンに当てはめて考えると、様々な例外を考慮しなければなりません。変更に対する独立性を持つかどうかという、 _Value Semantics_  の定義に基づいて判断しましょう。
+
+---
+
+- 次のページ: [Value Semantics を持たない場合の問題と対処法](problems-without-value-semantics.html)
