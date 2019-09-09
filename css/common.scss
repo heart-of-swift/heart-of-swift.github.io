@@ -4,6 +4,7 @@
 $theme-color: #F05136;
 $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
+$hr-color: rgb(232, 232, 232);
 
 .highlighter-rouge .highlight {
     background-color: $code-background-color;
@@ -13,4 +14,17 @@ $code-border-color: #F3F3F3;
 pre,code {
     background-color: $code-background-color;
     border-color: $code-border-color;
+}
+
+hr {
+    border-color: $hr-color;
+    border-top-style: solid;
+    border-bottom-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    margin-bottom: 1em;
+}
+
+.site-header {
+    border-top-style: none;
 }
