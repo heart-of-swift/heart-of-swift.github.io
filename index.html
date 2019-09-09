@@ -1,0 +1,48 @@
+---
+layout: home
+---
+
+{% assign size_chapters = site.data.book.chapters | size %}
+{% assign col_width = 100 | divided_by: size_chapters %}
+
+<div style="width: 100%; text-align: center;">
+    <img src="/img/swift-heart.png" style="width: 512px; max-width: 100%;" />
+</div>
+
+<div style="text-align: center;">
+    <h2>目次</h2>
+    <table>
+        <thead>
+            <tr>
+            {% for chapter in site.data.book.chapters %}
+                <th style="width: {{ col_width }}%">
+                {% if chapter.is_draft %}
+                    {{ chapter.name }} (Coming soon)
+                {% else %}
+                    <a href="{{ chapter.path }}">{{ chapter.name }}</a>
+                {% endif %}
+                </th>
+            {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="vertical-align: top;">
+            {% for chapter in site.data.book.chapters %}
+                <td>
+                    <ul>
+                    {% for section in chapter.sections %}
+                        <li>
+                        {% if section.is_draft %}
+                            {{ section.name }} (Coming soon)
+                        {% else %}
+                            <a href="{{ section.path }}">{{ section.name }}</a>
+                        {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+</div>

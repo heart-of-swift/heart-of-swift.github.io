@@ -17,8 +17,9 @@
         </label>
 
         <div class="trigger">
-          <a class="page-link" href="/value-semantics/">Value Semantics</a>
-          <a class="page-link" href="/protocol-oriented-programming/">Protocol-oriented Programming</a>
+        {% for chapter in site.data.book.chapters %}
+          <a class="page-link" href="{{ chapter.path }}">{{ chapter.name }}</a>
+        {% endfor %}
         </div>
       </nav>
     {%- endif -%}

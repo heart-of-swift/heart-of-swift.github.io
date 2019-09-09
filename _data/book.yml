@@ -1,0 +1,17 @@
+chapters:
+  - name: "Value Semantics"
+    path: "/value-semantics/"
+    sections:
+      - name: "Value Semantics とは"
+        path: "/value-semantics/"
+      - name: "Value Semantics を持たない場合の問題と対処法"
+        path: "/value-semantics/problems-without-value-semantics"
+        is_draft: true
+      - name: "値型の使い方"
+        path: "/value-semantics/how-to-use-value-types"
+        is_draft: true
+  - name: "Protocol-oriented Programming"
+    path: "/protocol-oriented-programming/"
+    sections:
+      - name: "Protocol-oriented Programming とは"
+        path: "/protocol-oriented-programming/"
