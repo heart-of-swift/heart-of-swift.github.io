@@ -3,9 +3,10 @@ layout: page
 title: Value Semantics
 ---
 
-- Value Semantics とは
-- Value Semantics を持たない場合の問題と対処法 (Coming soon)
-- 値型の使い方 (Coming soon)
+{% assign chapter=site.data.book.chapters[0] %}
+{% for section in chapter.sections %}
+- {% include section-link.md section=section %}
+{% endfor %}
 
 ## Value Semantics とは
 
@@ -217,4 +218,6 @@ _Value Semantics_ を持つかどうかをパターンに当てはめて考え�
 
 ---
 
-- 次のページ: Value Semantics を持たない場合の問題と対処法 (Coming soon)
+{% assign next_section=chapter.sections[1] %}
+
+- 次のページ: {% include section-link.md section=next_section %}

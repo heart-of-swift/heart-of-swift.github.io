@@ -1,0 +1,1 @@
+{% if include.section.is_draft %}{{ include.section.name }} (Coming soon){% else %}[{{ include.section.name }}]({{ include.section.path }}){% endif %}
