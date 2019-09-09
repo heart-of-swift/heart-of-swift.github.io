@@ -1,0 +1,16 @@
+---
+---
+
+$theme-color: #F05136;
+$code-background-color: #F5F5F5;
+$code-border-color: #F3F3F3;
+
+.highlighter-rouge .highlight {
+    background-color: $code-background-color;
+    border-color: $code-border-color;
+}
+
+pre,code {
+    background-color: $code-background-color;
+    border-color: $code-border-color;
+}
