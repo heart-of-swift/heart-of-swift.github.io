@@ -5,6 +5,7 @@ $theme-color: #F05136;
 $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
+$weak-color: #7F7F7F;
 
 .highlighter-rouge .highlight {
     background-color: $code-background-color;
@@ -27,4 +28,12 @@ hr {
 
 .site-header {
     border-top-style: none;
+}
+
+.accent {
+    color: $theme-color;
+}
+
+.weak {
+    color: $weak-color;
 }
