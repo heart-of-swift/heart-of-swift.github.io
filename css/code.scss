@@ -13,11 +13,15 @@ $compiler-control-color: #78492a;
 .highlight {
     color: $code-color;
 
+    .k {
+        color: $keyword-color;
+    }
+    
     .kd {
         color: $keyword-color;
     }
     
-    .k {
+    .kc {
         color: $keyword-color;
     }
     
