@@ -244,7 +244,7 @@ user = User(
 
 _参照型_ 中心の言語の中には、コードの複雑さを軽減するための特殊な構文や言語仕様を提供しているものもあります。たとえば、 Kotlin の `data class` を使えば `copy` メソッドが自動生成され、目的のプロパティだけを変更した新しいインスタンスを生成することができます。
 
-```kt
+```kotlin
 // Kotlin
 // イミュータブルクラスの場合
 var user: User = ...
@@ -254,13 +254,13 @@ user = user.copy(points = user.points + 100)
 
 しかし、それでもミュータブルクラスの場合と比べると複雑ですし、ネストしたプロパティを更新しようとするとさらに大変です。
 
-```kt
+```kotlin
 // Kotlin
 // ミュータブルクラスの場合
 group.owner.points += 100
 ```
 
-```kt
+```kotlin
 // Kotlin
 // イミュータブルクラスの場合
 group = group.copy(
