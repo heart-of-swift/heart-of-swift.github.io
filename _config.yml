@@ -17,7 +17,7 @@ title: Heart of Swift
 author: Yuta Koshizawa
 email: koher@koherent.org
 description: >- # this means to ignore newlines until "baseurl:"
-  "Heart of Swift" は、 Swift の Heart （中心）となる言語のコンセプトを説明することで、 Swift という言語の Heart （心）の形を描き出すオンラインブックです。
+  "Heart of Swift" は、 Swift の Heart である Value Semantics と Protocol-oriented Programming を軸に、 Swift という言語のコンセプトを説明するオンラインブックです。
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://heart-of-swift.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: koher
