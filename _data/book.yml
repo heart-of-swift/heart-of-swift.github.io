@@ -10,6 +10,8 @@ chapters:
         path: "/value-semantics/how-to-use-value-types"
   - name: "Protocol-oriented Programming"
     path: "/protocol-oriented-programming/"
+    is_draft: true
     sections:
       - name: "Protocol-oriented Programming とは"
         path: "/protocol-oriented-programming/"
+        is_draft: true

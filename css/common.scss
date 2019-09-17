@@ -6,6 +6,7 @@ $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
 $weak-color: #7F7F7F;
+$disabled-color: #BFBFBF;
 
 .highlighter-rouge .highlight {
     background-color: $code-background-color;
@@ -36,4 +37,8 @@ hr {
 
 .weak {
     color: $weak-color;
+}
+
+.site-nav span.page-link {
+    color: $disabled-color;
 }

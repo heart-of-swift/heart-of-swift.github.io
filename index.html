@@ -51,7 +51,7 @@ layout: home
             {% for chapter in site.data.book.chapters %}
                 <th style="width: {{ col_width }}%">
                 {% if chapter.is_draft %}
-                    {{ chapter.name }} (Coming soon)
+                    {{ chapter.name }} (準備中)
                 {% else %}
                     <a href="{{ chapter.path }}">{{ chapter.name }}</a>
                 {% endif %}
@@ -67,7 +67,7 @@ layout: home
                     {% for section in chapter.sections %}
                         <li>
                         {% if section.is_draft %}
-                            {{ section.name }} (Coming soon)
+                            {{ section.name }} (準備中)
                         {% else %}
                             <a href="{{ section.path }}">{{ section.name }}</a>
                         {% endif %}

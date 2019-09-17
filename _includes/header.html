@@ -18,7 +18,11 @@
 
         <div class="trigger">
         {% for chapter in site.data.book.chapters %}
+        {% if chapter.is_draft %}
+          <span class="page-link">{{ chapter.name }}</span>
+        {% else %}
           <a class="page-link" href="{{ chapter.path }}">{{ chapter.name }}</a>
+        {% endif %}
         {% endfor %}
         </div>
       </nav>
