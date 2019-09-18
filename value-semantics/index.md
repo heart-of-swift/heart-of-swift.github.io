@@ -8,7 +8,12 @@ title: Value Semantics
 - {% include section-link.md section=section %}
 {% endfor %}
 
-## Value Semantics とは
+{% assign section_index=0 %}
+{% assign section=chapter.sections[section_index] %}
+{% assign next_section_index=section_index | plus: 1 %}
+{% assign next_section=chapter.sections[next_section_index] %}
+
+## {{ section.name }}
 
 **_Value Semantics_** という用語は C++ などの言語で用いられることが多いようです。しかし、 Swift における _Value Semantics_ は、それらとは少し異なるニュアンスを持っています。 WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) の中で Swift における _Value Semantics_ について詳しく説明されていますが、残念ながらその定義については述べられていません。 Swift における _Value Semantics_ の定義は、 [Swift のリポジトリ](https://github.com/apple/swift)の中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) に記載されています。
 
