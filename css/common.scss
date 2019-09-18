@@ -13,6 +13,42 @@ $disabled-color: #BFBFBF;
     border-color: $code-border-color;
 }
 
+h1 {
+    font-size: 2.4em;
+}
+
+h1.post-title {
+    font-size: 2.4em;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+.post-content h2 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+.post-content h3 {
+    font-size: 1.6em;
+}
+
+h4 {
+    font-size: 1.4em;
+}
+
+.post-content h4 {
+    font-size: 1.4em;
+}
+
+h5 {
+    font-size: 1.2em;
+}
+
 pre,code {
     background-color: $code-background-color;
     border-color: $code-border-color;
