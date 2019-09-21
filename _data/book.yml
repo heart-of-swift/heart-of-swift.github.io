@@ -15,8 +15,9 @@ chapters:
       - name: "Protocol-oriented Programming とは"
         path: "/protocol-oriented-programming/"
         is_draft: true
-  - name: "補足ノート"
+  - name: "ノート"
     path: "/notes/"
+    is_appendix: true
     sections:
       - name: "防御的コピー"
         is_draft: true

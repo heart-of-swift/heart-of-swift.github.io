@@ -48,34 +48,59 @@ layout: home
     <table>
         <thead>
             <tr>
-            {% for chapter in site.data.book.chapters %}
-                <th style="width: {{ col_width }}%">
-                {% if chapter.is_draft %}
-                    {{ chapter.name }} (準備中)
+                {% assign num_cols=0 %}
+                {% for chapter in site.data.book.chapters %}
+                {% if chapter.is_appendix %}
                 {% else %}
+                {% assign num_cols=num_cols | plus: 1 %}
+                <th style="width: {{ col_width }}%">
+                    {% if chapter.is_draft %}
+                    {{ chapter.name }} (準備中)
+                    {% else %}
                     <a href="{{ chapter.path }}">{{ chapter.name }}</a>
-                {% endif %}
+                    {% endif %}
                 </th>
-            {% endfor %}
+                {% endif %}
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
             <tr style="vertical-align: top;">
-            {% for chapter in site.data.book.chapters %}
+                {% for chapter in site.data.book.chapters %}
+                {% if chapter.is_appendix %}
+                {% else %}
                 <td>
                     <ul>
-                    {% for section in chapter.sections %}
+                        {% for section in chapter.sections %}
                         <li>
-                        {% if section.is_draft %}
+                            {% if section.is_draft %}
                             {{ section.name }} (準備中)
-                        {% else %}
+                            {% else %}
                             <a href="{{ section.path }}">{{ section.name }}</a>
-                        {% endif %}
+                            {% endif %}
                         </li>
-                    {% endfor %}
+                        {% endfor %}
                     </ul>
                 </td>
-            {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td colspan="{{ num_cols }}">
+                    <ul>
+                        {% for chapter in site.data.book.chapters %}
+                        {% if chapter.is_appendix %}
+                        <li>
+                            {% if chapter.is_draft %}
+                            {{ chapter.name }} (準備中)
+                            {% else %}
+                            <a href="{{ chapter.path }}">{{ chapter.name }}</a>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
         </tbody>
     </table>
