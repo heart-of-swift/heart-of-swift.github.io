@@ -6,7 +6,7 @@ chapters:
         path: "/value-semantics/"
       - name: "Value Semantics を持たない型の問題と対処法"
         path: "/value-semantics/problems-without-value-semantics"
-      - name: "Swift を値型中心の言語にできた理由とその使い方"
+      - name: "Swift が値型中心の言語になれた理由とその使い方"
         path: "/value-semantics/how-to-use-value-types"
   - name: "Protocol-oriented Programming"
     path: "/protocol-oriented-programming/"
@@ -14,4 +14,13 @@ chapters:
     sections:
       - name: "Protocol-oriented Programming とは"
         path: "/protocol-oriented-programming/"
+        is_draft: true
+  - name: "補足ノート"
+    path: "/notes/"
+    sections:
+      - name: "防御的コピー"
+        is_draft: true
+      - name: "Read-only View"
+        is_draft: true
+      - name: "Copy-on-Write"
         is_draft: true

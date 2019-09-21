@@ -17,13 +17,14 @@
         </label>
 
         <div class="trigger">
-        {% for chapter in site.data.book.chapters %}
-        {% if chapter.is_draft %}
+          <a class="page-link" href="/#table-of-contents">目次</a>
+          {% for chapter in site.data.book.chapters %}
+          {% if chapter.is_draft %}
           <span class="page-link">{{ chapter.name }}</span>
-        {% else %}
+          {% else %}
           <a class="page-link" href="{{ chapter.path }}">{{ chapter.name }}</a>
-        {% endif %}
-        {% endfor %}
+          {% endif %}
+          {% endfor %}
         </div>
       </nav>
     {%- endif -%}
