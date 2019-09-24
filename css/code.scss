@@ -27,6 +27,12 @@ $compiler-control-color: #78492a;
     
     .kt {
         color: $type-color;
+        font-weight: normal;
+    }
+
+    .bp {
+        color: $keyword-color;
+        font-weight: bold;
     }
     
     .nv {
@@ -35,6 +41,12 @@ $compiler-control-color: #78492a;
     
     .nf {
         color: $member-color;
+        font-weight: normal;
+    }
+
+    .nc {
+        color: $type-color;
+        font-weight: normal;
     }
 
     .mi {

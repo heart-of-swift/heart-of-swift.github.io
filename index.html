@@ -48,11 +48,7 @@ layout: home
     <table>
         <thead>
             <tr>
-                {% assign num_cols=0 %}
                 {% for chapter in site.data.book.chapters %}
-                {% if chapter.is_appendix %}
-                {% else %}
-                {% assign num_cols=num_cols | plus: 1 %}
                 <th style="width: {{ col_width }}%">
                     {% if chapter.is_draft %}
                     {{ chapter.name }} (準備中)
@@ -60,15 +56,12 @@ layout: home
                     <a href="{{ chapter.path }}">{{ chapter.name }}</a>
                     {% endif %}
                 </th>
-                {% endif %}
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             <tr style="vertical-align: top;">
                 {% for chapter in site.data.book.chapters %}
-                {% if chapter.is_appendix %}
-                {% else %}
                 <td>
                     <ul>
                         {% for section in chapter.sections %}
@@ -82,23 +75,12 @@ layout: home
                         {% endfor %}
                     </ul>
                 </td>
-                {% endif %}
                 {% endfor %}
             </tr>
             <tr>
-                <td colspan="{{ num_cols }}">
+                <td colspan="{{ site.data.book.chapters | size }}">
                     <ul>
-                        {% for chapter in site.data.book.chapters %}
-                        {% if chapter.is_appendix %}
-                        <li>
-                            {% if chapter.is_draft %}
-                            {{ chapter.name }} (準備中)
-                            {% else %}
-                            <a href="{{ chapter.path }}">{{ chapter.name }}</a>
-                            {% endif %}
-                        </li>
-                        {% endif %}
-                        {% endfor %}
+                        <li><a href="/appendix/">Appendix</a></li>
                     </ul>
                 </td>
             </tr>

@@ -15,13 +15,11 @@ chapters:
       - name: "Protocol-oriented Programming とは"
         path: "/protocol-oriented-programming/"
         is_draft: true
-  - name: "ノート"
-    path: "/notes/"
-    is_appendix: true
-    sections:
-      - name: "防御的コピー"
-        is_draft: true
-      - name: "Read-only View"
-        is_draft: true
-      - name: "Copy-on-Write"
-        is_draft: true
+appendix:
+  - name: "防御的コピー"
+    is_draft: true
+  - name: "Read-only View"
+    is_draft: true
+  - name: "Copy-on-Write"
+    is_draft: true
+    path: "/appendix/copy-on-write"
