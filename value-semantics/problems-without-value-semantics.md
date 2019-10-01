@@ -16,7 +16,7 @@ _Value Semantics_ とは何かわかったところで、次に、 _Value Semant
 
 ### Value Semantics を持たない型が起こしがちな問題
 
-_Value Semantics_ の利点を知るために、 _Value Semantics_ を持たない型がどのような問題を引き起こすのかを見てみます。ここでは、 Value Semantics_ を持たない型が起こしがちな問題の例として次の二つを取り上げます。
+_Value Semantics_ の利点を知るために、 _Value Semantics_ を持たない型がどのような問題を引き起こすのかを見てみます。ここでは、 _Value Semantics_ を持たない型が起こしがちな問題の例として次の二つを取り上げます。
 
 - 意図しない変更
 - 整合性の破壊
