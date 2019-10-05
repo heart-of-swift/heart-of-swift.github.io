@@ -1,16 +1,8 @@
 ---
-layout: page
+layout: secsion
+chapter_index: 0
+section_index: 1
 ---
-
-{% assign chapter=site.data.book.chapters[0] %}
-{% assign section_index=1 %}
-{% assign section=chapter.sections[section_index] %}
-{% assign next_section_index=section_index | plus: 1 %}
-{% assign next_section=chapter.sections[next_section_index] %}
-{% assign prev_section_index=section_index | minus: 1 %}
-{% assign prev_section=chapter.sections[prev_section_index] %}
-
-## {{ section.name }}
 
 _Value Semantics_ とは何かわかったところで、次に、 _Value Semantics_ を持っていると何がうれしいのかを見て行きましょう。
 
@@ -369,8 +361,3 @@ Swift の標準ライブラリで提供される型は、ほぼすべてが _値
 _Value Semantics_ を持たない型は、「意図しない変更」や「整合性の破壊」などの問題を引き起こしがちです。それに対処するために、 _防御的コピー_ や _Read-only View_ 、 _イミュータブルクラス_ の使用など方法が考えられてきました。しかし、それらには一長一短があり、たとえば _イミュータブルクラス_ には変更が容易でないという問題があります。
 
 _値型_ を使えば簡単に _Value Semantics_ を実現でき、変更も容易です。 _値型_ は、 _ミュータブルクラス_ と _イミュータブルクラス_ のいいとこ取りをしたような存在だと言えます。 Swift の標準ライブラリの型はほぼすべてが _Value Semantics_ を持つ _値型_ であり、問題の回避と変更の容易さを両立できます。
-
----
-
-- 次のページ: {% include section-link.md section=next_section %}
-- 前のページ: {% include section-link.md section=prev_section %}

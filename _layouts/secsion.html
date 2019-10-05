@@ -1,0 +1,40 @@
+---
+layout: default
+---
+
+{% assign chapter=site.data.book.chapters[page.chapter_index] %}
+{% assign section=chapter.sections[page.section_index] %}
+
+{% assign prev_section_index=page.section_index | minus: 1 %}
+{% if prev_section_index >= 0 %}
+{% assign prev_section=chapter.sections[prev_section_index] %}
+{% endif %}
+
+{% assign next_section_index=page.section_index | plus: 1 %}
+{% if next_section_index < chapter.sections.size %}
+{% assign next_section=chapter.sections[next_section_index] %}
+{% endif %}
+
+{% if page.section_index == 0 %}
+<h1>{{ chapter.name }}</h1>
+<ul>
+    {% for a_section in chapter.sections %}
+    <li><a href="{{ a_section.path }}">{{ a_section.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<h2>{{ section.name }}</h2>
+
+{{ content }}
+
+<hr />
+
+<ul>
+    {% if next_section %}
+    <li>次のページ: <a href="{{ next_section.path }}">{{ next_section.name }}</a></li>
+    {% endif %}
+    {% if prev_section %}
+    <li>前のページ: <a href="{{ prev_section.path }}">{{ prev_section.name }}</a></li>
+    {% endif %}
+</ul>

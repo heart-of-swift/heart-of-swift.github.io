@@ -1,14 +1,8 @@
 ---
-layout: page
+layout: secsion
+chapter_index: 0
+section_index: 2
 ---
-
-{% assign chapter=site.data.book.chapters[0] %}
-{% assign section_index=2 %}
-{% assign section=chapter.sections[section_index] %}
-{% assign prev_section_index=section_index | minus: 1 %}
-{% assign prev_section=chapter.sections[prev_section_index] %}
-
-## {{ section.name }}
 
 [前ページ]({{ prev_section.path }})で見たように、 Swift の標準ライブラリで提供される型はほぼすべてが _値型_ で _Value Semantics_ を持っています。このような言語は稀です。 _値型_ が _ミュータブルクラス_ と _イミュータブルクラス_ のいいとこ取りをできる優れものなら、なぜ他の言語はそれを採用しないのでしょうか。 Swift にそれができた理由は何でしょうか。筆者は、次の二つがその理由だと考えています。
 
@@ -536,7 +530,3 @@ for inout user in users {
 _値型_ は _ミュータブルクラス_ と _イミュータブルクラス_ のいいとこ取りをした存在であり、 Swift はその _値型_ を中心とした言語です。 _値型_ 中心の言語はめずらしいですが Swift でそれが可能だったのは、 _Copy-on-Write_ を用いて効率の良い _値型_ コレクションを実現できたことと、 _値型_ の使い勝手を向上させる言語仕様によって _値型_ 中心のコードで問題になりがちな点をカバーしたことによると筆者は考えています。 Swift は進化の途上であり、 `for-in` ループと `inout` の組み合わせなど、今後さらに _値型_ の使い勝手が改善されていくものと思われます。
 
 ただし、 _値型_ も万能ではありません。 _値型_ × _Value Semantics_ と _ミュータブルクラス_ × _Reference Semantics_ を適切に使い分ける必要があります。どちらを採用すべきかわからないときは、まず _値型_ × _Value Semantics_ で始め、問題が生じたら _参照型_ × _Reference Semantics_ を検討することをおすすめします。
-
----
-
-- 前のページ: {% include section-link.md section=prev_section %}

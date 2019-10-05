@@ -1,19 +1,8 @@
 ---
-layout: page
-title: Value Semantics
+layout: secsion
+chapter_index: 0
+section_index: 0
 ---
-
-{% assign chapter=site.data.book.chapters[0] %}
-{% for section in chapter.sections %}
-- {% include section-link.md section=section %}
-{% endfor %}
-
-{% assign section_index=0 %}
-{% assign section=chapter.sections[section_index] %}
-{% assign next_section_index=section_index | plus: 1 %}
-{% assign next_section=chapter.sections[next_section_index] %}
-
-## {{ section.name }}
 
 **_Value Semantics_** という用語は C++ などの言語で用いられることが多いようです。しかし、 Swift における _Value Semantics_ は、それらとは少し異なるニュアンスを持っています。 WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) の中で Swift における _Value Semantics_ について詳しく説明されていますが、残念ながらその定義については述べられていません。 Swift における _Value Semantics_ の定義は、 [Swift のリポジトリ](https://github.com/apple/swift)の中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) に記載されています。
 
@@ -220,9 +209,3 @@ _Value Semantics_ を持つかどうかはパターンで判断するのでは�
 Swift における _Value Semantics_ の定義は、ある型が _Value Semantics_ を持つとき、その型の値が変更に対して独立であるということです。
 
 _値型_ と _Value Semantics_ 、 _参照型_ と _Reference Semantics_ は同じものではなく、 _値型_ だからといって _Value Semantics_ を持つとは限りませんし、 _参照型_ でも _Value Semantics_ を持つこともあります。 Type と Semantics を区別して理解することが重要です。 _Value Semantics_ を持つかどうかをパターンに当てはめて考えると、様々な例外を考慮しなければなりません。 _Value Semantics_  を持つかどうかは定義に基づいて判断しましょう。
-
----
-
-{% assign next_section=chapter.sections[1] %}
-
-- 次のページ: {% include section-link.md section=next_section %}
