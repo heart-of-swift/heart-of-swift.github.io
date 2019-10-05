@@ -1,5 +1,5 @@
 ---
-layout: secsion
+layout: section
 chapter_index: 0
 section_index: 2
 ---
