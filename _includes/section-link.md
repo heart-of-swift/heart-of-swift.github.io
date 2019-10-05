@@ -1,0 +1,1 @@
+{% if include.section.is_draft %}{{ include.section.name }}（準備中）{% else %}[{{ include.section.name }}]({{ include.section.path }}){% endif %}

@@ -1,0 +1,131 @@
+---
+---
+
+$theme-color: #F05136;
+$code-background-color: #F5F5F5;
+$code-border-color: #F3F3F3;
+$hr-color: rgb(232, 232, 232);
+$weak-color: #7F7F7F;
+$disabled-color: #BFBFBF;
+
+.site-nav {
+    float: right;
+    line-height: 54px; }
+    .site-nav .nav-trigger {
+      display: none; }
+    .site-nav .menu-icon {
+      display: none; }
+    .site-nav .page-link {
+      color: #111;
+      line-height: 1.5; }
+      .site-nav .page-link:not(:last-child) {
+        margin-right: 20px; }
+    @media screen and (max-width: 775px) {
+      .site-nav {
+        position: absolute;
+        top: 9px;
+        right: 15px;
+        background-color: #fdfdfd;
+        border: 1px solid #e8e8e8;
+        border-radius: 5px;
+        text-align: right; }
+        .site-nav label[for="nav-trigger"] {
+          display: block;
+          float: right;
+          width: 36px;
+          height: 36px;
+          z-index: 2;
+          cursor: pointer; }
+        .site-nav .menu-icon {
+          display: block;
+          float: right;
+          width: 36px;
+          height: 26px;
+          line-height: 0;
+          padding-top: 10px;
+          text-align: center; }
+          .site-nav .menu-icon > svg {
+            fill: #424242; }
+        .site-nav input ~ .trigger {
+          clear: both;
+          display: none; }
+        .site-nav input:checked ~ .trigger {
+          display: block;
+          padding-bottom: 5px; }
+        .site-nav .page-link {
+          display: block;
+          padding: 5px 10px;
+          margin-left: 20px; }
+          .site-nav .page-link:not(:last-child) {
+            margin-right: 0; } }
+
+.highlighter-rouge .highlight {
+    background-color: $code-background-color;
+    border-color: $code-border-color;
+}
+
+h1 {
+    font-size: 2.4em;
+}
+
+h1.post-title {
+    font-size: 2.4em;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+.post-content h2 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+.post-content h3 {
+    font-size: 1.6em;
+}
+
+h4 {
+    font-size: 1.4em;
+}
+
+.post-content h4 {
+    font-size: 1.4em;
+}
+
+h5 {
+    font-size: 1.2em;
+}
+
+pre,code {
+    background-color: $code-background-color;
+    border-color: $code-border-color;
+}
+
+hr {
+    border-color: $hr-color;
+    border-top-style: solid;
+    border-bottom-style: none;
+    border-left-style: none;
+    border-right-style: none;
+    margin-bottom: 1em;
+}
+
+.site-header {
+    border-top-style: none;
+}
+
+.accent {
+    color: $theme-color;
+}
+
+.weak {
+    color: $weak-color;
+}
+
+.site-nav span.page-link {
+    color: $disabled-color;
+}

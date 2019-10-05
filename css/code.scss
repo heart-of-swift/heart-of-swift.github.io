@@ -1,0 +1,60 @@
+---
+---
+
+$code-color: #000000;
+$keyword-color: #ba2ca3;
+$type-color: #703daa;
+$member-color: #7a54b2;
+$number-color: #2729d7;
+$string-color: #d12f1b;
+$comment-color: #008400;
+$compiler-control-color: #78492a;
+
+.highlight {
+    color: $code-color;
+
+    .k {
+        color: $keyword-color;
+    }
+    
+    .kd {
+        color: $keyword-color;
+    }
+    
+    .kc {
+        color: $keyword-color;
+    }
+    
+    .kt {
+        color: $type-color;
+        font-weight: normal;
+    }
+
+    .bp {
+        color: $keyword-color;
+        font-weight: bold;
+    }
+    
+    .nv {
+        color: $member-color;
+    }
+    
+    .nf {
+        color: $member-color;
+        font-weight: normal;
+    }
+
+    .nc {
+        color: $type-color;
+        font-weight: normal;
+    }
+
+    .mi {
+        color: $number-color;
+    }
+    
+    .c1 {
+        color: $comment-color;
+        font-style: normal;
+    }
+}
