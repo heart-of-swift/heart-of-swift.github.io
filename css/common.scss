@@ -129,3 +129,10 @@ hr {
 .site-nav span.page-link {
     color: $disabled-color;
 }
+
+.html-demo {
+  margin: 20px 0 20px 0;
+  padding: 10px;
+  background-color: $code-background-color;
+  border-radius: 3px;
+}
