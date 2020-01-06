@@ -83,6 +83,9 @@ h2 {
 
 h3 {
     font-size: 1.6em;
+    >code {
+      font-size: 1.0em;
+    }
 }
 
 .post-content h3 {
@@ -91,6 +94,9 @@ h3 {
 
 h4 {
     font-size: 1.4em;
+    >code {
+      font-size: 0.9em;
+    }
 }
 
 .post-content h4 {
@@ -113,6 +119,10 @@ hr {
     border-left-style: none;
     border-right-style: none;
     margin-bottom: 1em;
+}
+
+small {
+  color: $weak-color;
 }
 
 .site-header {
