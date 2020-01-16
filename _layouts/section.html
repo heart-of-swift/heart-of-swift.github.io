@@ -2,17 +2,33 @@
 layout: default
 ---
 
-{% assign chapter=site.data.book.chapters[page.chapter_index] %}
+{% assign chapters=site.data.book.chapters %}
+{% assign chapter=chapters[page.chapter_index] %}
 {% assign section=chapter.sections[page.section_index] %}
+
+{% assign prev_chapter_index=page.chapter_index | minus: 1 %}
+{% if prev_chapter_index >= 0 %}
+{% assign prev_chapter=chapters[prev_chapter_index] %}
+{% endif %}
+
+{% assign next_chapter_index=page.chapter_index | plus: 1 %}
+{% if next_chapter_index >= 0 %}
+{% assign next_chapter=chapters[next_chapter_index] %}
+{% endif %}
 
 {% assign prev_section_index=page.section_index | minus: 1 %}
 {% if prev_section_index >= 0 %}
 {% assign prev_section=chapter.sections[prev_section_index] %}
+{% elsif prev_chapter %}
+{% assign prev_chapter_last_section_index=prev_chapter.sections.size | minus: 1 %}
+{% assign prev_section=prev_chapter.sections[prev_chapter_last_section_index] %}
 {% endif %}
 
 {% assign next_section_index=page.section_index | plus: 1 %}
 {% if next_section_index < chapter.sections.size %}
 {% assign next_section=chapter.sections[next_section_index] %}
+{% elsif next_chapter %}
+{% assign next_section=next_chapter.sections[0] %}
 {% endif %}
 
 <h1>{{ chapter.name }}</h1>
@@ -35,10 +51,20 @@ layout: default
 <hr />
 
 <ul class="paging">
-    {% if next_section %}
-    <li><a href="{{ next_section.path }}">{{ next_section.name }}</a> <span class="icon">→</span></li>
-    {% endif %}
-    {% if prev_section %}
-    <li><span class="icon">←</span> <a href="{{ prev_section.path }}">{{ prev_section.name }}</a></li>
-    {% endif %}
+    <li>
+        {% if next_section %}
+        <a href="{{ next_section.path }}">{{ next_section.name }}</a>
+        {% else %}
+        <a href="/conclusion">おわりに</a>
+        {% endif %}
+        <span class="icon">→</span>
+    </li>
+    <li><span class="icon">
+        ←</span>
+        {% if prev_section %}
+        <a href="{{ prev_section.path }}">{{ prev_section.name }}</a>
+        {% else %}
+        <a href="/#introduction">はじめに</a>
+        {% endif %}
+    </li>
 </ul>
