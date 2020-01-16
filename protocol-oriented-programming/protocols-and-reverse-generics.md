@@ -4,48 +4,50 @@ chapter_index: 1
 section_index: 2
 ---
 
-本章では、 _値型_ のパフォーマンスを損ねずにコードを抽象化するプロトコルの使用法として、制約としてのプロトコルについて見てきました。しかし、 Swift が誕生して時間が経過し、様々なユースケースで Swift が使われる中で、制約としてのプロトコルによってコードを抽象化するために欠けている機能の存在が明らかになってきました。
+本章では、制約としてプロトコルを用いることで、 _値型_ 中心のコードにおいてもパフォーマンスを損ねずにコードを抽象化できることを見てきました。しかし、 Swift の誕生から時間が経過し、様々なユースケースが生じる中で、制約としてのプロトコルによるコード抽象化に欠けているものが明らかになってきました。
 
-そのような問題とその解決策について Core Team の Joe Groff さんがまとめたドキュメントが ["Improving the UI of generics"](https://forums.swift.org/t/improving-the-ui-of-generics/22814) です。このドキュメントの中で **_リバースジェネリクス_** という新しい概念が説明され、その簡易形である **_Opaque Result Type_** が Swift 5.1 で部分的に導入されました。
+そのような問題と解決策について Core Team の Joe Groff さんがまとめたドキュメントが ["Improving the UI of generics"](https://forums.swift.org/t/improving-the-ui-of-generics/22814) です。このドキュメントの中で **_リバースジェネリクス_** という新しい概念が説明され、その簡易形である **_Opaque Result Type_** が Swift 5.1 で部分的に導入されました。
 
-本節では、制約としてのプロトコルと _リバースジェネリクス_ および _Opaque Result Type_ の関係を説明し、プロトコルを使ったコードの抽象化についての全体像を示します。
+本節では、制約としてのプロトコルと _リバースジェネリクス_ および _Opaque Result Type_ の関係を説明し、プロトコルを使ったコード抽象化の全体像を示します。
 
 ### 制約としてのプロトコルに欠けていた抽象化
 
-[前節]({{ prev_section.path }})まで見てきたように、 Swift にとっては制約としてのプロトコルが適しています。実際、 Swift の標準ライブラリでも制約としてのプロトコルが広く使われており、ほとんどすべてのプロトコルが「制約として」使用されています。
+[前節]({{ prev_section.path }})まで見てきたように、 Swift にとっては制約としてのプロトコルが適しています。実際、 Swift の標準ライブラリでも制約としてのプロトコルが広く使われており、ほとんどすべてのプロトコルが制約として使用されています。
 
 たとえば、 `Sequence` プロトコルでは `IteratorProtocol` が `associatedtype` の制約として使用されています。
 
 ```swift
 protocol Sequence {
-    associatedtype Iterator: IteratorProtocol // 👈 ここで「制約として」使われている
+    associatedtype Iterator: IteratorProtocol // 制約として使われている
     func makeIterator() -> Iterator
 }
 ```
 
-興味深いことに、 [Kotlin](https://kotlinlang.org) では同様の目的でインタフェース（ Swift のプロトコルのような役割を果たすもの）が `iterator` メソッド（ Swift の `Sequence` の `makeIterator` メソッドに相当）の戻り値の「型として」使用されています。
+興味深いことに、 [Kotlin](https://kotlinlang.org) では同様の目的でインタフェース（ Swift のプロトコルのような役割を果たすもの）が `iterator` メソッド（ Swift の `makeIterator` メソッドに相当）の戻り値の型として使用されています。
 
 ```kotlin
 // Kotlin
 interface Iterable<out T> {
-    operator fun iterator(): Iterator<T> // 👈 ここで「型として」使われている
+    operator fun iterator(): Iterator<T> // 型として使われている
 }
 ```
 
-Swift では `IteratorProtocol` が「制約として」使われ、 Kotlin では `Iterator` インタフェースが「型として」使われているわけです。これは、両言語の特徴をよく表しています。 Kotlin は参照型中心の言語なので、 `Iterator` インタフェースを「型として」使ってもオーバーヘッドはほとんどありません。しかし、値型中心の Swift ではそうはいきません。
+Swift では `IteratorProtocol` が制約として使われ、 Kotlin では `Iterator` インタフェースが型として使われているわけです。これは、両言語の特徴をよく表しています。 Kotlin は参照型中心の言語なので、 `Iterator` インタフェースを型として使ってもオーバーヘッドは大きくありません。しかし、値型中心の Swift ではそうはいきません。
 
-そもそも、 `IteratorProtocol` は `Element` という `associatedtype` を持っているので、現状の Swift では「型として」使うことができません。しかし、 _Generalized Existential_ がサポートされれば `IteratorProtocol` も「型として」使うことが可能になります。
+そもそも、 `IteratorProtocol` は `Element` という `associatedtype` を持っているので、現状の Swift では型として使うことができません。しかし、 _Generalized Existential_ がサポートされれば `IteratorProtocol` も型として使うことが可能になります。
 
 ```swift
-// IteratorProtocol を「型として」使う場合
+// IteratorProtocol を型として使う場合
 protocol Sequence {
     associatedtype Element
     func makeIterator() ->
-        IteratorProtocol<.Element == Element>  // 👈 ここで「型として」使われている
+        IteratorProtocol<.Element == Element>  // 型として使われている
 }
 ```
 
-しかし、たとえ _Generalized Existential_ がサポートされても、 `makeIterator` メソッドの戻り値を `IteratorProtocol` 型にするのは望ましくありません。もし `IteratorProtocol` を「型として」使うと、イテレータの `next` メソッドを使って要素を取り出す度に _Existential Container_ のオーバーヘッドが発生します。そのような繰り返し実行される基本的な処理において _Existential Container_ のオーバーヘッドを許容することはできません。そのため、 Swift では `IteratorProtocol` を「制約として」用いることで、 _Existential Container_ のオーバーヘッドを防止しています。
+`Sequence` プロトコルが上記のように宣言されれば、 Kotlin の `Iterable` インタフェースとほぼ同じ内容になります。
+
+しかし、たとえ _Generalized Existential_ がサポートされても、 `makeIterator` メソッドの戻り値を `IteratorProtocol` 型にするのは望ましくありません。もし `IteratorProtocol` を型として使うと、イテレータの `next` メソッドを使って要素を取り出す度に _Existential Container_ のオーバーヘッドが発生します。イテレーションのように繰り返し実行される基本的な処理において _Existential Container_ のオーバーヘッドを許容することはできません。そのため、 Swift では `IteratorProtocol` を制約として用いることで、 _Existential Container_ のオーバーヘッドを防止しています。
 
 たとえば、 `Array` の場合、 `makeIterator` メソッドの戻り値の型は `IndexingIterator<[Element]>` という具体的な型になります。
 
@@ -63,11 +65,11 @@ extension String: Sequence {
 }
 ```
 
-`IteratorProtocol` は `Iterator` という `associatedtype` の「制約として」のみ現れ、それは `Array` や `String` などの具体的な型を実装する際には `IndexingIterator<[Element]>` や `String.Iterator` という具体的な型に置き換えられるわけです。そうすると、これらのイテレータを利用する際にも、抽象的な `IteratorProtocol` 型としてではなく、それぞれの具体的なイテレータ型として利用することができ、 _Existential Container_ のオーバーヘッドは発生しません。 `next` メソッドの呼び出しもオーバーヘッドのない _静的ディスパッチ_ になります。
+`IteratorProtocol` は `Iterator` という `associatedtype` の制約としてのみ現れ、 `Array` や `String` などの具体的な型を実装する際には `IndexingIterator<[Element]>` や `String.Iterator` という具体的な型に置き換えられるわけです。そうすると、これらのイテレータを利用する際にも、抽象的な `IteratorProtocol` 型としてではなく、それぞれの具体的なイテレータ型として利用することができ、 _Existential Container_ のオーバーヘッドが発生しません。 `next` メソッドの呼び出しもオーバーヘッドのない _静的ディスパッチ_ になります。
 
 しかし、未解決の問題が一つあります。
 
-前述のように、 `Array` の `makeIterator` メソッドが `IndexingIterator<[Element]>` を返し、 `String` の `makeIterator` メソッドが `String.Iterator` を返します。しかし、これが引き起こすことは必ずしも良いことだけではありません。
+前述のように、 `Array` の `makeIterator` メソッドは `IndexingIterator<[Element]>` を返し、 `String` の `makeIterator` メソッドは `String.Iterator` を返します。しかし、これが露出していることは必ずしも望ましくありません。
 
 Swift の標準ライブラリには次のように、 `IteratorProtocol` に適合する大量のイテレータ型が存在します。
 
@@ -106,11 +108,11 @@ Swift の標準ライブラリには次のように、 `IteratorProtocol` に適
 問題となるのはイテレータの利用時です。 `makeIterator` メソッドの利用者はこれらのイテレータ型の違いを意識する必要はありません。
 
 ```swift
-var iterator: IndexingIterator<[Int]> // 👈 この型を意識する必要はない
+var iterator: IndexingIterator<[Int]> // この型を意識する必要はない
     = array.makeIterator()
 ```
 
-この `iterator` の型が `IndexingIterator<[Int]>` だろうと、 `Int` を取り出す他の何らかのイテレータであろうと、その違いを利用者が意識することはありません。前述のほとんどのイテレータ型は `next` メソッドしか持たず、 `Sequence` から要素を取り出すという意味でどれも同じ機能を提供しています。
+この変数 `iterator` の型が `IndexingIterator<[Int]>` だろうと、 `Int` を取り出す他の何らかのイテレータであろうと、その違いを利用者が意識することはありません。前述のほとんどのイテレータ型は `next` メソッドしか持たず、 `Sequence` から要素を取り出すという意味でどれも同じ機能を提供しています。
 
 にも関わらず、 `Array` の `makeIterator` メソッドは戻り値の型 `IndexingIterator<[Int]>` を公開しています。もし将来的に `Array` に特化したより高速なイテレータが実装されたとしても、 `Array` の `makeIterator` メソッドの戻り値の型を変更するのは困難です。 `Array` の `makeIterator` メソッドは Swift 標準ライブラリの `public` な API であり、その型を変更するということは、標準ライブラリの API の型を変更するということだからです。
 
@@ -122,7 +124,7 @@ extension Array: Sequence {
 }
 ```
 
-これであれば、実体として `IndexingIterator<[Int]>` が返されていたところを、 `Array` に特化したより高速なイテレータに差し替えられても API としての表面上の型に変更はありません。 **利用者にとって本来必要なのはこのレベルの抽象度です。** 具体的なイテレータの型を知る必要はありません。
+これであれば、実体として `IndexingIterator<[Element]>` が返されていたところを、 `Array` に特化したより高速なイテレータに差し替えられても API としての表面上の型に変更はありません。 **利用者にとって本来必要なのはこのレベルの抽象度です。** 具体的なイテレータの型を知る必要はありません。
 
 しかし、かといって戻り値の型に _Generalized Existential_ を使う（ `IteratorProtocol` を型として使う）わけにはいきません。
 
@@ -134,7 +136,7 @@ extension Array: Sequence {
 
 今の Swift ではこれはできませんが（ _Generalized Existential_ がサポートされていないことに加えて、 _Self-conformance_ もサポートされていないので、 `IteratorProtocol<.Element == Element>` が `associatedtype Iterator: IteratorProtocol` を満たせない）、仮にできたとしても _Existential Container_ のオーバーヘッドの問題が残ります。 `makeIterator` メソッドの戻り値の型は抽象的に書きたいですが、抽象化のために _Existential Container_ のオーバーヘッドを受け入れることはできません。
 
-つまり、今望んでいるのは、 **抽象的にコードを書きながら、具象型と同じパフォーマンスがほしい** ということです。これは、従来の Swift では実現できないことでした。
+つまり、今望んでいるのは、 **抽象的にコードを書きながら、具象型と同じパフォーマンスがほしい** ということです。
 
 ### 抽象的なコードと具象型のパフォーマンス（引数の場合）
 
@@ -147,7 +149,7 @@ func useAnimal<A: Animal>(_ animal: A) {
 }
 ```
 
-上記のコードでは引数 `animal` の型が型パラメータ `A` によって抽象化されていますが、コンパイル時に型パラメータが _特殊化_ されることによって、次のように具象型で記述したのと同等のパフォーマンスが得られました。
+上記のコードでは引数 `animal` の型が型パラメータ `A` によって抽象化されていますが、コンパイル時に型パラメータが _特殊化_ されることによって、具象型で記述したのと同等のパフォーマンスが得られました。たとえば、上記の `useAnimal` 関数の型パラメータ `A` が `Cat` に _特殊化_ されると、下記の `useAnimal` 関数と同等のパフォーマンスを実現できます。
 
 ```swift
 // 具象型引数
@@ -194,7 +196,7 @@ func useAnimal<A: Animal>(_ animal: A) {
 }
 ```
 
-しかし、 `makeAnimal` 関数ではこの関係が逆転します。 `makeAnimal` 関数が `Cat` 型を値を返すということを決定するのは関数の実装者です。
+しかし、 `makeAnimal` 関数ではこの関係が逆転します。 `makeAnimal` 関数が `Cat` 型を値を返すことを決定するのは関数の実装者です。
 
 ```swift
 func makeAnimal() -> A { // A はどのように宣言する？🤔
@@ -215,9 +217,9 @@ let animal = makeAnimal() // 利用者が A を使用
 <tr><th><code>makeAnimal</code></th><td><strong>実装者</strong>が具象型を決定する。<strong>利用者</strong>が抽象型を使用する。</td></tr>
 </table>
 
-`useAnimal` と `makeAnimal` で **利用者** と **実装者** が逆転しています。 `makeAnimal` の戻り値を抽象化することは通常のジェネリクスではできません。
+`useAnimal` と `makeAnimal` で **利用者** と **実装者** が逆転しています。 `makeAnimal` の戻り値の型を抽象化することは通常のジェネリクスではできません。
 
-これを可能にするものとして、 **_リバースジェネリクス_** という概念が Manolo van Ee さんによって[提唱されました](https://forums.swift.org/t/reverse-generics-and-opaque-result-types/21608)。また、 Core Team の Joe Groff さんが関連する議論を整理し、 ["Improving the UI of generics"](https://forums.swift.org/t/improving-the-ui-of-generics/22814) というドキュメントにまとめました。このドキュメントは、過去にジェネリクス回りのロードマップとして示された ["Generics Manifesto"](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md) を補完する位置づけのものです。 Swift 5.1 時点では _リバースジェネリクス_ は採択されていません。しかし、 _リバースジェネリクス_ のサブセットと言える _Opaque Result Type_ （後述）は Swift 5.1 で部分的にサポートされました。そのような経緯から、 _リバースジェネリクス_ は将来的に何らかの形で採択される可能性が高いと筆者は考えています。
+これを可能にするものとして、 **_リバースジェネリクス_** という概念が Manolo van Ee さんによって[提唱されました](https://forums.swift.org/t/reverse-generics-and-opaque-result-types/21608)。また、 Core Team の Joe Groff さんが関連する議論を整理し、 ["Improving the UI of generics"](https://forums.swift.org/t/improving-the-ui-of-generics/22814) というドキュメントにまとめました。このドキュメントは、過去にジェネリクス回りのロードマップとして示された ["Generics Manifesto"](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md) を補完する位置づけのものです。 Swift 5.1 時点では _リバースジェネリクス_ は採択されていません。しかし、機能的に _リバースジェネリクス_ のサブセットと言える _Opaque Result Type_ （後述）は Swift 5.1 で部分的にサポートされました。そのような経緯から、 _リバースジェネリクス_ は将来的に何らかの形で採択される可能性が高いと筆者は考えています。
 
 ここでは、 _リバースジェネリクス_ について議論されている中で最も有力な次のシンタックスを採用します。通常のジェネリクスと異なり、 _リバースジェネリクス_ では型パラメータを `->` の後ろに記述します。
 
@@ -244,7 +246,9 @@ print(animal.foo()) // ✅
 let cat: Cat = animal // ⛔ animal の実体は Cat だけどコンパイルエラー
 ```
 
-これは、 `A` の実体を隠蔽する上で重要です。もし、上記のコードを許すと何が起こるでしょうか。 `makeAnimal` 関数が返すのが `Cat` ではなく `Dog` に変更されたときに、上記のコードは `Dog` インスタンスを `Cat` 型変数に代入しようとしていることになり、コンパイルエラーになってしまいます。 `makeAnimal` 関数の利用者目線で考えてみましょう。この `makeAnimal` 関数が何らかのライブラリの API だったとしましょう。ライブラリをアップデートしたときに前述の変更が加えられていると、 `makeAnimal` 関数の型は変更されていないのに、それまでコンパイルが通っていたコードが急にコンパイルが通らなくなってしまう可能性があるということです。たとえ `A` が `Cat` であることがわかっていても、最初から `A` と `Cat` を区別して扱っておくことでそのような事態を防ぐことができます。
+これは、 `A` の実体を隠蔽する上で重要です。もし、上記のコードを許すと何が起こるでしょうか。 `makeAnimal` 関数が `Cat` ではなく `Dog` を返すように変更されたとしましょう。すると、上記のコードは `Dog` インスタンスを `Cat` 型変数に代入しようとしていることになり、コンパイルエラーになってしまいます。
+
+`makeAnimal` 関数の利用者目線では、これはとんでもないことです。この `makeAnimal` 関数が何らかのライブラリの API だったとしましょう。ライブラリをアップデートしたときに前述の変更が加えられていると、 `makeAnimal` 関数の型は変更されていないのに、それまでコンパイルが通っていたコードが急にコンパイルが通らなくなってしまうということです。たとえ `A` が `Cat` であることがわかっていても、最初から `A` と `Cat` を区別して扱っておくことでそのような事態を防ぐことができます。
 
 `makeIterator` メソッドについても、 `makeAnimal` 関数と同じことが言えます。 Swift 5.1 時点では、 `Array` の `makeIterator` メソッドは次のように `IndexingIterator` を返すことを露出してしまっています。
 
@@ -275,7 +279,7 @@ var iterator: IndexingIterator<[Int]>
     = [2, 3, 5].makeIterator() // ⛔ コンパイルエラー
 ```
 
-もし上記のコードが許されていると、将来的に `Array` の `makeIterator` メソッドが、別のより効率的なイテレータを返すように変更されたときに、急に上記のコードがコンパイルエラーになってしまうということになります。初めから `I` と `IndexingIterator` を区別しておくことで下記のようなコードを書くことを強制し、そのような問題が発生することを防止することができます。
+もし上記のコードが許されていると、将来的に `Array` の `makeIterator` メソッドが、別のより効率的なイテレータを返すように変更されたときに、急に上記のコードがコンパイルエラーになってしまいます。初めから `I` と `IndexingIterator` を区別しておくことで下記のようなコードを書くことを強制し、そのような問題の発生を防止することができます。
 
 ```swift
 var iterator = [2, 3, 5].makeIterator() // ✅
@@ -283,7 +287,7 @@ var iterator = [2, 3, 5].makeIterator() // ✅
 
 ### Opaque Result Type
 
-_リバースジェネリクス_ を使えば抽象的な戻り値と具象型のパフォーマンスを両立できますが、必ずしもシンタックスがわかりやすいとは言えません。 `makeAnimal` 関数が何らかの `Animal` を返すということを意味するコードは次の通りです。
+_リバースジェネリクス_ を使えば抽象的な戻り値と具象型のパフォーマンスを両立できますが、必ずしもシンタックスがわかりやすいとは言えません。 `makeAnimal` 関数が何らかの `Animal` を返す場合、それを意味するコードは次の通りです。
 
 ```swift
 // リバースジェネリクス
@@ -320,7 +324,7 @@ func useAnimal<A: Animal>(_ animal: A) {
 }
 ```
 
-これを _Opaque Argument Type_ で書くと次のようになります。
+これを _Opaque Argument Type_ で書いたコードが下記です。
 
 ```swift
 // Opaque Argument Type
@@ -335,7 +339,7 @@ _Opaque Result Type_ と _リバースジェネリクス_ の関係と同じよ�
 
 ### ジェネリクスでしかできないこと
 
-_Opaque Result Type_ と _Opaque Argument Type_ を合わせて **_Opaque Type_** と呼びます。 _Opaque Type_ がジェネリクス（ _リバースジェネリクス_ を含みます）のシンタックスシュガーなら、 _Opaque Type_ さえあればジェネリクスは不要でしょうか。そうではありません。ジェネリクスでしかできないことの例を見てみましょう。
+_Opaque Result Type_ と _Opaque Argument Type_ を合わせて **_Opaque Type_** と呼びます。 _Opaque Type_ がジェネリクス（ _リバースジェネリクス_ を含みます）のシンタックスシュガーなら、 _Opaque Type_ さえあればジェネリクスは不要なのでしょうか。そうではありません。ジェネリクスでしかできないことの例を見てみましょう。
 
 たとえば、 `Animal` のつがいを引数に受け取る関数 `useAnimalPair` を考えてみます。
 
@@ -366,7 +370,7 @@ func useAnimalPair<A1: Animal, A2: Animal>(_ pair: (A1, A2)) { // これでは�
 }
 ```
 
-つまり、 `some Animal` を 2 回書いた場合、それらは異なる型を意味することになります。もし、最初の `useAnimalPair` 関数のように、同種の `Animal` を二つ引数にとりたい場合にはジェネリクスを使うしかありません。
+`some Animal` を 2 回書いた場合、それらは異なる型を意味することになります。もし、最初の `useAnimalPair` 関数のように、同種の `Animal` を二つ引数にとりたい場合にはジェネリクスを使うしかありません。
 
 このように、 **_Opaque Type_ ではなくジェネリクスでしかできないこともあります。 _Opaque Type_ はジェネリクスでできることの一部を簡潔に書くための手段でしかありません。** このことからも、筆者はいずれ _リバースジェネリクス_ は採択されるだろうと考えています。 _Opaque Result Type_ が完全にサポートされても、 _リバースジェネリクス_ でしかできないことが存在するからです。
 
@@ -382,7 +386,7 @@ func useAnimalPair( _ pair: (some Animal, some Animal)) {
 }
 ```
 
-このとき、二つの `some Animal` は別の型を意味しますが、字面の上ではまったく同じです。しかし、言語的には「ある（ some ） `Animal` 」と「ある（ some ） `Animal` 」が異なる `Animal` を示すのは自然です。 `some` の代わりに当初考えられていた `opaque` が選ばれていると、二つの `opaque Animal` が異なるというのはよりわかりづらかったでしょう。
+このとき、二つの `some Animal` は別の型を意味しますが、字面の上ではまったく同じです。しかし、「ある（ some ） `Animal` 」と「ある（ some ） `Animal` 」が異なる `Animal` を示すのは言語的には自然です。 `some` の代わりに当初考えられていた `opaque` が選ばれていると、二つの `opaque Animal` が異なる型を表すというのはよりわかりづらかったでしょう。
 
 また、次のような例からも `some` というキーワード選定の秀逸さが見て取れます。
 
@@ -392,13 +396,13 @@ func useAnimals(_ animals: [some Animal]) {
 }
 ```
 
-この関数の引数 `animals` は、 _Homogeneous_ な（同種の値しか格納できない） `Array` です。「ある（ some ） `Animal` の `Array`」にある一種類の `Animal` のインスタンスしか格納できないことは、言語的に自然です。
+この関数の引数 `animals` は、 _Homogeneous_ な（同種の値しか格納できない） `Array` です。「ある（ some ） `Animal` 」の `Array` がある一種類の `Animal` のインスタンスしか格納できないことは、言語的に自然です。
 
 ### SwiftUI と Opaque Type
 
-Swift 5.1 と同時に [SwiftUI](https://developer.apple.com/documentation/swiftui) がリリースされました。 SwiftUI で初めて _Opaque Result Type_ に触れたという人も多いのではないかと思います。 _Opaque Result Type_ のユースケースの例として、 SwiftUI の中で _Opaque Result Type_ がどのように使われているのか、それがないと何が起こるのかを見てみましょう。
+Swift 5.1 と同時に [SwiftUI](https://developer.apple.com/documentation/swiftui) がリリースされました。 SwiftUI で初めて _Opaque Result Type_ に触れたという人も多いのではないかと思います。 _Opaque Result Type_ のユースケースの例として、 SwiftUI の中で _Opaque Result Type_ がどのように使われているのか、それがないと何が起こるかを見てみましょう。
 
-SwiftUI を使うと宣言的に UI を記述できますが、その文脈では [Function Builder](https://github.com/apple/swift-evolution/blob/9992cf3c11c2d5e0ea20bee98657d93902d5b174/proposals/XXXX-function-builders.md) に焦点が当たりがちです。しかし、メソッドチェーンを主体とした API もその一旦を担っています。
+SwiftUI を使うと宣言的に UI を記述できますが、その文脈では [Function Builder](https://github.com/apple/swift-evolution/blob/9992cf3c11c2d5e0ea20bee98657d93902d5b174/proposals/XXXX-function-builders.md) に焦点が当たりがちです。しかし、メソッドチェーンを主体とした API もその一端を担っています。
 
 たとえば、次のように `padding` メソッドと `background` メソッドを連ねることによって、下記の虹色の正方形を作ることができます。
 
@@ -413,6 +417,7 @@ Spacer().frame(width: 20, height: 20)
     .padding(20).background(Color.red)
 ```
 
+<p>
 <div style="background-color: #FF0000; padding: 20px; width: 260px; height: 260px;">
     <div style="background-color: #FF7F00; padding: 20px; width: 220px; height: 220px;">
         <div style="background-color: #FFFF00; padding: 20px; width: 180px; height: 180px;">
@@ -427,10 +432,11 @@ Spacer().frame(width: 20, height: 20)
         </div>
     </div>
 </div>
+</p>
 
 では、上記の式の型はどうなるでしょうか。一見 `Spacer` が `padding` をプロパティとして持っていれば、 `Spacer().padding(...)` の結果も同じ `Spacer` 型として扱えそうです。しかし、 `padding` を二つ連ねるとどうでしょうか。しかも、設定できるのは `padding` だけではありません。あらゆる設定値を複雑に組み合わせ入れ子状に設定できなければなりません。上のコードでも `frame`, `padding`, `background` の三つのメソッドを組み合わせて入れ子構造を作っています。
 
-これを実現するには、たとえば `Padding` 型や `Background` 型を作って、それで入れ子構造を作ることができます。たとえば、 `padding` メソッドでは `Padding` のイニシャライザを呼び出して返すなどして、上記のコードが次のコードと同じ意味になるようにすれば良さそうです。
+これを実現するには、たとえば `Padding` 型や `Background` 型を作って、それらの入れ子構造として表現することができます。そうすると、上記のメソッドチェーンは次のイニシャライザの入れ子と同じことにできます。
 
 ```swift
 // ※ あくまで例であり、実際の SwiftUI とは異なります
@@ -463,11 +469,11 @@ struct Background: View {
 }
 ```
 
-もし UIKit の `UIView` のように、 SwiftUI の `View` がビューの基底クラスになっているのであればこれで問題ありません。しかし、 SwiftUI の `View` はプロトコルです。そして、個々のビューは `struct` です。そもそも、[前節]({{ prev_section.path }})の通り `View` プロトコルは `associatedtype Body` を持っているため、これを抽象的な `View` 型として扱うことはできません。仮に扱うことができたとしても、 _Existential Container_ のオーバーヘッドが発生してしまいます。 `AnyView` を使っても、そのオーバーヘッドが無視できません。
+もし UIKit の `UIView` のように、 SwiftUI の `View` がビューの基底クラスになっているのであればこれで問題ありません。しかし、 SwiftUI の `View` はプロトコルです。そして、個々のビューは `struct` です。そもそも、[前節]({{ prev_section.path }})で説明した通り、 `View` プロトコルは `associatedtype Body` を持っているため、これを抽象的な `View` 型として扱うことはできません。仮に扱うことができたとしても、 _Existential Container_ のオーバーヘッドが発生してしまいます。 `AnyView` を使っても同様です。
 
-では、 `Background` はどのように実装すれば良いでしょうか。そして、最初のメソッドチェーン（もしくは先のイニシャライザの入れ子呼び出し）の型はどうなるでしょうか。
+では、 `Background` はどのように実装すれば良いでしょうか。そして、最初に挙げたメソッドチェーン（もしくは先のイニシャライザの入れ子呼び出し）の型はどうなるでしょうか。
 
-抽象的な型を使わずに書けるようにしようとすると、 `Background` の実装は次のようになります。
+抽象的な型を使わずに書くことを考えると、 `Background` の実装は次のようになります。
 
 ```swift
 // ※ あくまで例であり、実際の SwiftUI とは異なります
@@ -477,7 +483,7 @@ struct Background<Content: View>: View {
 }
 ```
 
-`Background` に型パラメータを持たせて、対象となるビューの型を指定できるようにします。たとえば、 `Background(Spacer(), Color.red)` であれば、 `Background<Spacer>` 型になります。
+`Background` に型パラメータを持たせて、対象となるビューの型を指定できるようにします。たとえば、 `Background(Spacer(), Color.red)` という式の型は `Background<Spacer>` 型になります。
 
 `Padding` や `Frame` も同様です。
 
@@ -512,7 +518,7 @@ ModifiedContent<ModifiedContent<ModifiedContent<ModifiedContent<ModifiedContent<
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight" style="white-space: pre-wrap; word-break: break-all;"><code><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">ModifiedContent</span><span class="o">&lt;</span><span class="kt">Spacer</span><span class="p">,</span> <span class="n">_FrameLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="n">_PaddingLayout</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_BackgroundModifier</span><span class="o">&lt;</span><span class="kt">Color</span><span class="o">&gt;&gt;</span>
 </code></pre></div></div>
 
-もしこのような虹色の正方形を表示するビュー `RainbowSquare` を実装しようとすると次のようになってしまいます。
+もしこのような虹色の正方形を表示するビュー `RainbowSquare` を実装しようとすると、 `body` プロパティの型としてそれが現れます。
 
 <!-- ```swift
 struct RainbowSquare: View {
@@ -543,7 +549,9 @@ struct RainbowSquare: View {
 <span class="p">}</span>
 </code></pre></div></div>
 
-とても書けたものではありません。そして、この実際の型 `ModifiedContent<ModifiedContent<...>>` に興味はありません。興味があるのは、この型が `View` プロトコルに適合していて、 `body` プロパティの型として適切であるということだけです。 _Opaque Result Type_ があれば、この長ったらしいビューの型を `some View` として簡潔に記述できます。
+とても書けたものではありません。しかも、虹を 7 色から 8 色に変更しようと思った場合（虹を何色で表すかは地域によって異なります）、 `body` プロパティの中身だけでなく型まで変更しなければなりません。少しコードを変更しただけで `body` の型が変わってしまうのでは、中身の実装に集中することができません。
+
+_Opaque Result Type_ を使えば、この長ったらしいビューの型を `some View` として簡潔に記述できます。 `body` の中身を変更しても、 `some View` の部分を変更する必要はありません。
 
 ```swift
 struct RainbowSquare: View {
@@ -560,9 +568,7 @@ struct RainbowSquare: View {
 }
 ```
 
-また、 _Opaque Result Type_ を使わずに生の型を書いていると、 `body` プロパティの中身を少し変更しただけで型の記述も変更しなければなりません。今は虹を 7 色で書いていますが、 8 色に変更しようと思った場合（虹を何色で表すかは地域によって異なります）、 `body` プロパティの中身だけではなく型まで変更しなければなりません。 _Opaque Result Type_ を使って `some View` と書いておけば、型を気にせず中身の記述だけに集中できます。
-
-_Opaque Result Type_ を使って実際の型を隠蔽したことで何か不都合が生じるでしょうか。 API の利用者にとっても、この `body` プロパティの実際の型が何であるかは重要ではありません。 `body` は「ある（ some ） `View` 」であれば十分です。一般的に SwiftUI の `View` プロトコルに適合した型を実装する際に、 `body` プロパティの型を `some View` に隠蔽しておいて困ることはありません。抽象度として適切だと言えるでしょう。
+このように、 _Opaque Result Type_ を使って `body` プロパティの実際の型を隠蔽したことで何か不都合が生じるでしょうか。 API の利用者にとって、この `body` プロパティの実際の型が何であるかは重要ではありません。 `body` の型が `View` プロトコルに適合していることがわかれば十分です。つまり、「ある（ some ） `View` 」で良いわけです。一般的に、 `body` プロパティの型を `some View` に隠蔽して困ることはありません。 `some View` 型として表現することは、抽象度として適切な選択だと言えるでしょう。
 
 そのような理由で、 _Opaque Result Type_ は SwiftUI で欠かせない役割を果たしています。
 
@@ -570,7 +576,7 @@ _Opaque Result Type_ を使って実際の型を隠蔽したことで何か不�
 
 ここで _Opaque Type_ と _Existential Type_ の関係を整理しておきたいと思います。どちらも抽象化のために使用されます。
 
-例として、 `useAnimal` 関数の引数を抽象化を考えます。 _Opaque Type_ の場合、次のようになります。
+例として、 `useAnimal` 関数の引数の型の抽象化を考えます。 _Opaque Type_ の場合、次のようになります。
 
 ```swift
 // Opaque Type
@@ -579,7 +585,7 @@ func useAnimal(_ animal: some Animal) {
 }
 ```
 
-一方で、 _Existential Type_ の場合は次のようになります。このとき、引数 `animal` の型が、 _Existential Type_ の方が簡潔に記述できます。
+一方で、 _Existential Type_ の場合は下記のようになります。このとき、 _Existential Type_ の方が引数 `animal` の型を簡潔に記述できます。
 
 ```swift
 // Existential Type
@@ -588,11 +594,11 @@ func useAnimal(_ animal: Animal) { // Opaque Type より簡潔
 }
 ```
 
-しかし、上記の二つのコードの内、望ましいのは _Opaque Type_ による記述です。 _Opaque Type_ はジェネリクスのシンタックスシュガーであり、[前節]({{ prev_section.path }})で見たように、ジェネリクスと _Existential Type_ のどちらでも書けるのであればジェネリクスを用いるのが望ましいです。にも関わらず、今のシンタックスでは _Existential Type_ の方が簡潔に書けてしまっています。
+しかし、上記の二つのコードの内、望ましいのは _Opaque Type_ による記述です。 _Opaque Type_ はジェネリクスのシンタックスシュガーであり、実行時のオーバーヘッドがありません。にも関わらず、今のシンタックスでは _Existential Type_ の方が簡潔に書けてしまっています。
 
-ジェネリクスと _Existential Type_ ではシンタックスの見た目が大きく異なったためあまり気になりませんでしたが、 _Opaque Type_ を導入すると、この逆転は気になります。
+ジェネリクスと _Existential Type_ ではシンタックスの見た目が大きく異なったためあまり気になりませんでしたが、 _Opaque Type_ を導入するとシンタックスの見た目が近くなったこともあり、この逆転が気になります。
 
-そこで、 _Opaque Type_ に `some` というキーワードが必要なように、 _Existential Type_ にも `any` というキーワードを付与するシンタックスが[提案されています](https://forums.swift.org/t/improving-the-ui-of-generics/22814#heading--clarifying-existentials)。 `any` が導入されると、たとえば、上記の _Existential Type_ を使った `useAnimal` 関数は次のようになります。
+そこで、 _Opaque Type_ に `some` というキーワードが必要なように、 _Existential Type_ にも `any` というキーワードを付与することが "Improving the UI of generics" の中で[提案されています](https://forums.swift.org/t/improving-the-ui-of-generics/22814#heading--clarifying-existentials)。 `any` が導入されると、たとえば、上記の _Existential Type_ を使った `useAnimal` 関数は次のようになります。
 
 ```swift
 // Existential Type
@@ -627,7 +633,7 @@ func useAnimals(_ animals: [some Animal]) {
 }
 ```
 
-このとき、引数 `animals` は「ある（ some ） `Animal` 」の `Array` なので、 `Cat` や `Dog` を混在させることのでき **ない** _Homogeneous_ な `Array` を表すことは言語的に自然です。
+このとき、引数 `animals` は「ある（ some ） `Animal` 」の `Array` です。「ある `Animal` 」の `Array` が特定の一種類の `Animal` しか格納できない（ _Homogeneous_ である）ことは言語的に自然です。
 
 ```swift
 // Opaque Type
@@ -645,14 +651,14 @@ func useAnimals(_ animals: [any Animal]) {
 }
 ```
 
-このとき、引数 `animals` は「任意の（ any ） `Animal` 」の `Array` なので、 `Cat` や `Dog` を混在させることのできる _Heterogeneous_ な `Array` を表すことは言語的に自然です。
+このとき、引数 `animals` は「任意の（ any ） `Animal` 」の `Array` です。「任意の `Animal` 」の `Array` が `Cat` や `Dog` を混在させることのできる（ _Heterogeneous_ である）ことは言語的に自然です。
 
 ```swift
 // Existential Type
 useAnimals([Cat(), Dog()]) // ✅
 ```
 
-つまり、 _Opaque Type_ と _Existential Type_ という型システム上の概念が、 `some` と `any` というキーワードによって言語的にも自然に対応しているわけです。シンタックスがセマンティクスを自然に表しているという意味で、すばらしいキーワード選定だと言えるのではないでしょうか。
+つまり、 _Opaque Type_ と _Existential Type_ という型システム上の概念が、 `some` と `any` というキーワードによって言語的にも対応しているわけです。シンタックスがセマンティクスを自然に表しているという意味で、すばらしいキーワード選定だと言えるのではないでしょうか。
 
 ### まとめ
 
@@ -661,7 +667,7 @@ useAnimals([Cat(), Dog()]) // ✅
 | | 引数 | 戻り値 |
 |:--|:--:|:--:|
 | _ジェネリクス_ <br/><small><em>Type-level abstraction</em></small><br/><small>制約としてのプロトコル</small> | `<A: Animal>(A) -> Void`  | <small><em>リバースジェネリクス</em></small><br/> `() -> <A: Animal> A` <br/><small>未サポート</small> |
-| _Opaque Type_ <br/><small><em>Type-level abstraction</em></small><br/><small>ジェネリクスのシュガー</small> | <small><em>Opaque Result Type</em></small><br/> `(some Animal) -> Void` <br/><small>未サポート</small> | <small><em>Opaque Result Type</em></small><br/> `() -> some Animal` <br/><small>一部サポート</small> |
+| _Opaque Type_ <br/><small><em>Type-level abstraction</em></small><br/><small>ジェネリクスのシュガー</small> | <small><em>Opaque Argument Type</em></small><br/> `(some Animal) -> Void` <br/><small>未サポート</small> | <small><em>Opaque Result Type</em></small><br/> `() -> some Animal` <br/><small>一部サポート</small> |
 | _Existential Type_ <br/><small><em>Value-level abstraction</em></small><br/><small>型としてのプロトコル</small>  | `(any Animal) -> Void` <br/><small>一部サポート</small> | `() -> any Animal` <br/><small>一部サポート</small> |
 
 上二段の _ジェネリクス_ と _Opaque Type_ は、コンパイル時に静的に抽象化を扱います。コード上で抽象化された型がコンパイル時に _特殊化_ によって展開され、実行時のパフォーマンスに影響のない抽象化が可能となります。 Core Team の Joe Groff さんは "Improving the UI of generics" の中で、これを **_Type-level abstraction_** と呼んでいます。
@@ -670,6 +676,6 @@ useAnimals([Cat(), Dog()]) // ✅
 
 Swift は _値型_ 中心の言語であるにも関わらず、 _値型_ 前提で抽象化を考えたときに、実行時のオーバーヘッドなく戻り値の型を抽象化する方法がありませんでした（戻り値 × _Type-level abstraction_）。 _リバースジェネリクス_ とそのシンタックスシュガーである _Opaque Result Type_ によって、パフォーマンスを損ねることなく戻り値の型を抽象化できるようになりました。
 
-ただし、いつでも _Type-level abstraction_ で良いというわけではなく、状況に応じて _Value-level abstraction_ も必要となります。そういう意味で、 _Existential Type_ も Swift には欠かせない存在です。その _Existential Type_ に `any` というキーワードを付与することが提案されており、それによって _Existential Type_ と _Opaque Type_ をシンタックス上、対等にすることができます、また、 `any` が付与されているかどうかで、プロトコルが「型として」用いられているのか、「制約として」用いられているのかがシンタックス上わかりやすくなります。
+ただし、いつでも _Type-level abstraction_ で良いというわけではなく、状況に応じて _Value-level abstraction_ も必要となります。そういう意味で、 _Existential Type_ も Swift には欠かせない存在です。その _Existential Type_ に `any` というキーワードを付与することが提案されており、それによって _Existential Type_ と _Opaque Type_ をシンタックス上、対等にすることができます、また、 `any` が付与されているかどうかで、プロトコルが型として用いられているのか、制約として用いられているのかがシンタックス上わかりやすくなります。
 
-"Improving the UI of generics" の中でこれらの関係性が示されて、 Swift に必要な道具が明確になりました。しかし、上記の表の通り、 Swift 5.1 時点ではまだまだサポートされていない道具が多くあります。 _Opaque Result Type_ は、現時点では `[some Animal]` や `some Sequence<.Element == Int>` などができません。 _Existential Type_ についても、 _Generalized Existential_ （ `any Sequence<.Element == Int>` や `any Hashable` など）が欠けたままです。 _Opaque Argument Type_ や _Reverse Generics_ については部分的にすらサポートされていません。それらの必要性は、本章を通して、 Swift が _値型_ 中心の言語であることから必然的に導かれてきました。すべてが揃うことによって、 Swift は _値型_ 中心の言語として、完成により近づけることでしょう。
+"Improving the UI of generics" の中でこれらの関係性が示されて、 Swift に必要な道具が明確になりました。しかし、上記の表の通り、 Swift 5.1 時点ではまだまだサポートされていない道具が多くあります。 _Opaque Result Type_ は、現時点では `[some Animal]` や `some Sequence<.Element == Int>` などができません。 _Existential Type_ についても、 _Generalized Existential_ （ `any Sequence<.Element == Int>` や `any View` など）が欠けたままです。 _Opaque Argument Type_ や _Reverse Generics_ については部分的にすらサポートされていません。それらの必要性は、本章を通して、 Swift が _値型_ 中心の言語であることから必然的に導かれました。すべてが揃うことによって、 Swift は _値型_ 中心の言語として、より完成に近づけることでしょう。

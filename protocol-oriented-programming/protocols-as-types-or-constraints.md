@@ -8,13 +8,13 @@ section_index: 1
 {% assign prev_section_index=page.section_index | minus: 1 %}
 {% assign prev_section=chapter.sections[prev_section_index] %}
 
-[前節]({{ prev_section.path }})で見たように、型としてのプロトコルと制約としてのプロトコルには、どちらでもできること・どちらかでしかできないことがあります。
+[前節]({{ prev_section.path }})で述べたように、型としてのプロトコルと制約としてのプロトコルには、どちらでもできること・どちらかでしかできないことがあります。
 
 この関係を図で表すと次のようになります。
 
 <img src="img/protocol-roles.png" alt="「型として」・「制約として」のプロトコルにできること" style="width: 512px; max-width: 100%;" />
 
-青い円が型としてのプロトコルでできることを、赤い円が制約としてのプロトコルでできることを表しています。二つの円の重なる部分が、「型として」・「制約として」のどちらのプロトコルでもできることです。[前節]({{ prev_section.path }})の `useAnimal` 関数はどちらでも実装できるので、この紫の領域に属しています。
+青い円が型としてのプロトコルでできることを、赤い円が制約としてのプロトコルでできることを表しています。二つの円の重なる部分が、「型として」・「制約として」、どちらのプロトコルでもできることです。[前節]({{ prev_section.path }})の `useAnimal` 関数はどちらでも実装できるので、この紫の領域に属しています。
 
 ```swift
 // 型としてのプロトコル
@@ -76,14 +76,14 @@ useAnimals([Cat(), Dog()]) // ⛔ コンパイルエラー
 
 `useAnimals` の引数の型は `[A]` です。型パラメータ `A` に当てはめることができるのは `Cat` や `Dog` などの具体的な型だけです。 `Animal` のような抽象的な型を当てはめることはできません。
 
-`useAnimals` に渡すことができるのは _Heterogeneous_　**でない** `Array` だけです。
+`useAnimals` に渡すことができるのは _Heterogeneous_ **でない** `Array` だけです。
 
 ```swift
 useAnimals([Cat(), Cat()]) // ✅ [Cat] を渡す（ A は Cat）
 useAnimals([Dog(), Dog()]) // ✅ [Dog] を渡す（ A は Dog）
 ```
 
-このような、同種の値だけを格納した（ _Heterogeneous_　**でない** ）コレクションを _Homogeneous Collection_ と呼びます。制約としてのプロトコルを使うと、 _Homogeneous Collection_ を表すことはできますが _Heterogeneous Collection_ を表すことはできません。
+このような、同種の値だけを格納した（ _Heterogeneous_ **でない** ）コレクションを _Homogeneous Collection_ と呼びます。制約としてのプロトコルを使うと、 _Homogeneous Collection_ を表すことはできますが _Heterogeneous Collection_ を表すことはできません。
 
 このように、 **_Heterogeneous Collection_ が必要な場合には、プロトコルを制約として使うのではなく型として使う** 必要があります。
 
@@ -100,7 +100,7 @@ let animal: Animal = Cat()
 useAnimal(animal) // ⛔ コンパイルエラー
 ```
 
-プロトコル型がそのプロトコル自体に適合することを **_Self-conformance_** と言いますが、上で見たように、一般的な Swift のプロトコルは _Self-conformance_ を持ちません。プロトコル型はそのプロトコルのメンバをすべて持つので、プロトコルが _Self-conformance_ を持っても一見問題なさそうに思えます。しかし、たとえば `Animal` や `Cat`, `useAnimal` が次のように実装されていると破綻してしまいます。
+プロトコル型がそのプロトコル自体に適合することを **_Self-conformance_** と言います。上で見たように、一般的な Swift のプロトコルは _Self-conformance_ を持ちません。プロトコル型はそのプロトコルのメンバをすべて持つので、プロトコルが _Self-conformance_ を持っても一見問題なさそうに思えます。しかし、たとえば `Animal` や `Cat`, `useAnimal` が次のように実装されていると破綻してしまいます。
 
 ```swift
 protocol Animal {
@@ -137,7 +137,7 @@ protocol View {
 
 `subviews` プロパティの型 `[View]` に型としてのプロトコルが使われています。
 
-`subviews` は _Heterogeneous_ な `Array` なので、異なる種類のビューを格納できます。この性質は、次のようにチェックボックスやラベル、ボタンなどを同一の階層にフラットに並べるために必要になります。
+`subviews` は _Heterogeneous_ な `Array` なので、異なる種類のビューを格納できます。この性質は、次のようにチェックボックスやラベル、ボタンなどを同一の階層にフラットに並べたいときに必要になります。
 
 <div class="html-demo">
     <div><input type="checkbox" /> 利用規約に同意します。</div>
@@ -189,7 +189,9 @@ let viewGroup = ViewGroup<???>([ // ??? のところに View とは書けない
 ]) // ⛔ コンパイルエラー
 ```
 
-この例のように制約としてのプロトコルが適切ではないケースでは、制約としてのプロトコルにこだわる必要はありません。無理やり制約としてのプロトコルを使っても、冗長でわかりづらいコードになってしまいます。素直に型としてのプロトコルを使用するのが良いでしょう。
+`???` のところに `View` と書きたいところですが、 _Self-conformance_ がないのでそれもできません。
+
+この例のように、型としてのプロトコルが適切なケースでは、制約としてのプロトコルにこだわる必要はありません。無理やり制約としてのプロトコルを使っても、冗長でわかりづらいコードになってしまいます。素直に型としてのプロトコルを使用するのが良いでしょう。
 
 ##### Generalized Existential と型消去
 
@@ -212,11 +214,11 @@ Swift では `associatedtype` を持つプロトコルを型として使用す�
 let views: [View] = [Text("..."), Image("...")] // ⛔ コンパイルエラー
 ```
 
-しかし、 `assocatedtype` を持つプロトコルが型として使用できないのはコンパイラの実装上の都合です。理論上の問題があるわけではありません。将来的に、 `associatedtype` を持つプロトコルでも型として使用できるようにしようということが[議論されています](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#generalized-existentials)。そのような、 `associatedtype` を持ったプロトコルで表される型は **_Generalized Existential_** と呼ばれています。 _Generalized Existential_ がサポートされた場合、上記のコードはコンパイル可能なコードとなります。
+しかし、 `assocatedtype` を持つプロトコルが型として使用できないのはコンパイラの実装上の都合です。理論上の問題があるわけではありません。将来的に、 `associatedtype` を持つプロトコルも型として使えるようにしようということが[議論されています](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#generalized-existentials)。そのような、 `associatedtype` を持ったプロトコルで表される型は **_Generalized Existential_** と呼ばれています。 _Generalized Existential_ がサポートされた場合、上記のコードはコンパイル可能なコードとなります。
 
-そうは言っても、現状で _Generalized Existential_ はサポートされていません。しかし、これまで見てきたように、型としてのプロトコルが必要になるケースもあります。そのようなケースではどうすれば良いのでしょうか。
+そうは言っても、現状で _Generalized Existential_ はサポートされていません。しかし、これまで見てきたように、型としてのプロトコルが必要になるケースもあります。そのようなケースではどうすれば良いでしょうか。
 
-そのようなケースのために用意されているワークアラウンドが **_型消去（ Type Erasure ）_** です。 `View` プロトコルを型として使用する代わりに、上記のコードは `AnyView` を使って次のように書けます。
+そのような目的で用意されているワークアラウンドが **_型消去（ Type Erasure ）_** です。 `View` プロトコルを型として使用する代わりに、上記のコードは `AnyView` を使って次のように書けます。
 
 ```swift
 let views: [AnyView] = [AnyView(Text("...")), AnyView(Image("..."))] // ✅
@@ -234,20 +236,19 @@ Swift の標準ライブラリにも、 `AnySequence` や `AnyHashable` など�
 ```swift
 protocol Equatable {
     static func == (
-        lhs: Self, // 👈 Self-requirement
-        rhs: Self  // 👈 Self-requirement
+        lhs: Self, // Self-requirement
+        rhs: Self  // Self-requirement
     ) -> Bool
 }
 ```
 
-上記のコード中の `Self` が _Self-requirement_ です。プロトコルの中に記述された `Self` は、そのプロトコルに適合した型を実装する際に、その型自体に置き換えられなければなりません。
-
+上記のコード中の `Self` が _Self-requirement_ です。プロトコルの中に記述された `Self` は、そのプロトコルに適合した型を実装する際に、その型自体に置き換えられなければなりません。たとえば、 `Int` を `Equatable` に適合させる場合には `Self` は `Int` に、 `String` を `Equatable` に適合させる場合には `Self` は `String` に置き換えられます。
 
 ```swift
 extension Int: Equatable {
     static func == (
-        lhs: Int, // 👈 Self が Int に置き換えられる
-        rhs: Int  // 👈 Self が Int に置き換えられる
+        lhs: Int, // Self が Int に置き換えられる
+        rhs: Int  // Self が Int に置き換えられる
     ) -> Bool { ... }
 }
 ```
@@ -255,24 +256,22 @@ extension Int: Equatable {
 ```swift
 extension String: Equatable {
     static func == (
-        lhs: String, // 👈 Self が String に置き換えられる
-        rhs: String  // 👈 Self が String に置き換えられる
+        lhs: String, // Self が String に置き換えられる
+        rhs: String  // Self が String に置き換えられる
     ) -> Bool { ... }
 }
 ```
 
-このように、 `Int` を `Equatable` に適合させる場合には `Self` は `Int` に、 `String` を `Equatable` に適合させる場合には `Self` は `String` に置き換えられます。
-
-_Self-requirement_ を持つプロトコルは「型として」は使用せず、「制約として」使うことだけが想定されています。 `Self` を持つプロトコルを「型として」使用しようとするとコンパイルエラーになります（正確には、引数などの _Contravariant Position_ に `Self` を持つ場合に「型として」使用することができません。戻り値などの _Covariant Position_ にしか `Self` を持たないプロトコルは「型として」使用することができます）。
+_Self-requirement_ を持つプロトコルは型としては使用せず、制約として使うことだけが想定されています。 `Self` を持つプロトコルを型として使おうとするとコンパイルエラーになります（正確には、 _Contravariant Position_ （引数など）に `Self` を持つ場合に型として使用することができません。 _Covariant Position_ （戻り値など）にしか `Self` を持たないプロトコルは型として使用することができます）。
 
 ```swift
 // 型としてのプロトコル
 let a: Equatable = 42 // ⛔ コンパイルエラー
 ```
 
-どうして _Self-requirement_ を持つプロトコルは「型として」使えないのでしょうか。仮に `Equatable` プロトコルが型として使えると何が起こるか見てみましょう。
+どうして _Self-requirement_ を持つプロトコルは型として使えないのでしょうか。仮に `Equatable` プロトコルが型として使えると何が起こるか見てみましょう。
 
-`Equatable` プロトコルが「型として」使用できるなら、 `Int` も `String` も `Equatable` プロトコルに適合しているので、 `Int` 型と `String` 型の値をそれぞれ `Equatable` 型の変数に代入することができます。しかし、それらを `==` で比較しようとすると何が起こるでしょうか。
+`Equatable` プロトコルが型として使用できるなら、 `Int` も `String` も `Equatable` プロトコルに適合しているので、 `Int` 型と `String` 型の値をそれぞれ `Equatable` 型の変数に代入することができます。しかし、それらを `==` で比較しようとすると何が起こるでしょうか。
 
 ```swift
 // 型としてのプロトコル
@@ -283,7 +282,7 @@ a == b // 🤔 Int と String の比較はどこにも実装されていない
 
 `Equatable` プロトコルは、自身を比較するための `==` 演算子を要求します。しかし、 `Int` と `String` が実装しているのは、それぞれ `Int` 同士・ `String` 同士の演算だけで、 `Int` と `String` を比較したときの処理はどこにも実装されていません。
 
-上記のコードのように、 `42` という整数と `"42"` という文字列を比較した場合、値の型が異なるので `false` とするという考え方もあれば、 JavaScript のように文字列に変換すると同じなので `true` とするという考え方もあります。 `a == b` を `true` とすることも `false` とすることもできません。もし `Equatable` プロトコルを「型として」使えたとしても、 `a == b` はコンパイルエラーにするしかありません。
+上記のコードのように、 `42` という整数と `"42"` という文字列を比較した場合、どのような結果を返せば良いでしょうか。値の型が異なるので `false` を返すという考え方もあれば、 JavaScript のように文字列に変換すると同じなので `true` を返すという考え方もあります。つまり、実装次第です。そして、 `Int` と `String` を比較する `==` の実装はどこにもありません。静的型付言語としては、 `a == b` をコンパイルエラーにするしかありません。
 
 ```swift
 // 型としてのプロトコル
@@ -292,7 +291,7 @@ let b: Equatable = "42"
 a == b // ⛔ コンパイルエラーにするしかない
 ```
 
-さらに、たとえ `42` という同じ `Int` 型の値同士であったとしても、 `a == b` はコンパイルエラーとするしかありません。
+さらに、たとえ `42` という同じ `Int` 型の値同士であったとしても、 `a == b` はコンパイルエラーにせざるを得ません。
 
 下記のコードでは `a` と `b` に代入されている値はどちらも `Int` ですが、下記のコードの `a == b` と上記のコードの `a == b` はどちらも `Equatable` 同士を `==` 演算子で比較しているという点では同じです。 `a == b` という式の型はまったく同じであり、上記をコンパイルエラーとするなら下記もコンパイルエラーでなければなりません。
 
@@ -303,7 +302,7 @@ let b: Equatable = 42
 a == b // ⛔ Int 同士でも Equatable を介すとコンパイルエラー
 ```
 
-`Equatable` 型同士を `==` で比較できないなら、 `Equatable` プロトコルを「型として」使ってもできることはありません。 `Equatable` 型を使っても何もできないのであれば、それは `Any` 型と同じです。
+`Equatable` 型同士を `==` で比較できないなら、 `Equatable` プロトコルを型として使ってできることは何もありません。 `Equatable` 型にできることが何もないのであれば、それは `Any` 型と同じです。
 
 ```swift
 let a: Any = 42
@@ -311,13 +310,13 @@ let b: Any = 42
 a == b // ⛔ Any 同士に == は実装されていないのでコンパイルエラー
 ```
 
-つまり、 `Equatable` プロトコルを「型として」使うことには意味がありません。意味がないのであれば「型として」使うこと自体をコンパイラが禁止するのが妥当でしょう。これが、 _Self-requirement_ を持つプロトコルが「型として」使えない理由です。
+つまり、 `Equatable` プロトコルを型として使うことに意味はありません。意味がないのであれば型として使うこと自体をコンパイラが禁止するのが妥当でしょう。これが、 _Self-requirement_ を持つプロトコルが型として使えない理由です。
 
-_Self-requirement_ を持つプロトコルは、次のように、「制約として」使うことだけが想定されています。
+_Self-requirement_ を持つプロトコルは、次のように、制約として使うことだけが想定されています。
 
 ```swift
 // 制約としてのプロトコル
-extension Sequence where Element: Equatable { // 👈 Equatable が「制約として」使われている
+extension Sequence where Element: Equatable { // Equatable が制約として使われている
     func contains(_ element: Element) -> Bool {
         ...
     }
@@ -328,6 +327,6 @@ extension Sequence where Element: Equatable { // 👈 Equatable が「制約と�
 
 ### まとめ
 
-[前節]({{ prev_section.path }})から見てきたように、プロトコルは「型として」も「制約として」も使うことができます。型としてのプロトコルは、 _値型_ にとって実行時のオーバーヘッドが大きいので、どちらでも良いケースでは「制約として」プロトコルを使用する方が Swift に適しています。しかし、すべてのケースを「制約として」書けるわけではありません。「型として」・「制約として」のプロトコルを適切に使い分ける必要があります。
+[前節]({{ prev_section.path }})から見てきたように、プロトコルは型としても制約としても使うことができます。型としてのプロトコルは、 _値型_ にとって実行時のオーバーヘッドが大きいので、どちらでも良いケースでは制約としてプロトコルを使用する方が Swift に適しています。しかし、すべてのケースを制約として書けるわけではありません。「型として」・「制約として」のプロトコルを適切に使い分ける必要があります。
 
 本節では、型としてのプロトコルが必要となる例として _Heterogeneous Collection_ を、制約としてのプロコトルが必要となる例として _Self-requirement_ を挙げました。また、それらの具体的なユースケースとして、 GUI のビューツリーと `Equatable` プロトコルの `==` 演算子をそれぞれ紹介しました。
