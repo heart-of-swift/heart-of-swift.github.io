@@ -11,7 +11,7 @@ layout: home
 </div>
 
 <section style="text-align: center; width: 100%;">
-    <h2>はじめに</h2>
+    <h2 id="introduction">はじめに</h2>
     <div style="text-align: left;">
         <p><strong>Swift は <em>値型</em> を中心とした特徴的なプログラミング言語です。</strong>多くのプログラミング言語は <em>参照型</em> が中心のため、他のプログラミング言語の経験者でも、その違いに戸惑うことは少なくありません。 Swift がどのようなコンセプトの言語なのかを理解していないと、 Swift らしくない（ Swifty でない）非効率なコードを書いてしまいがちです。そこで <strong>"Heart of Swift"</strong> と題して、筆者が Swift を学ぶ上で最も重要だと思うことをまとめたのが本書です。</p>
         <p>Heart という単語には、「心臓」の他に「心」や「中心」などの意味があります。</p>
@@ -46,44 +46,46 @@ layout: home
 <section style="text-align: center; width: 100%;">
     <h2 id="table-of-contents">目次</h2>
     <table>
-        <thead>
-            <tr>
-                {% for chapter in site.data.book.chapters %}
-                <th style="width: {{ col_width }}%">
-                    {% if chapter.is_draft %}
-                    {{ chapter.name }} (準備中)
-                    {% else %}
-                    <a href="{{ chapter.path }}">{{ chapter.name }}</a>
-                    {% endif %}
-                </th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="vertical-align: top;">
-                {% for chapter in site.data.book.chapters %}
-                <td>
-                    <ul>
-                        {% for section in chapter.sections %}
-                        <li>
-                            {% if section.is_draft %}
-                            {{ section.name }} (準備中)
-                            {% else %}
-                            <a href="{{ section.path }}">{{ section.name }}</a>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                <td colspan="{{ site.data.book.chapters | size }}">
-                    <ul>
-                        <li><a href="/appendix/">Appendix</a></li>
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
+        <tr>
+            <th>
+                <a href="/#introduction">はじめに</a>
+            </th>
+        </tr>
+        {% for chapter in site.data.book.chapters %}
+        <tr>
+            <th>
+                {% if chapter.is_draft %}
+                第 {{ forloop.index }} 章&nbsp;&nbsp;{{ chapter.name }} (準備中)
+                {% else %}
+                <a href="{{ chapter.path }}">第 {{ forloop.index }} 章&nbsp;&nbsp;{{ chapter.name }}</a>
+                {% endif %}
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    {% for section in chapter.sections %}
+                    <li>
+                        {% if section.is_draft %}
+                        {{ section.name }} (準備中)
+                        {% else %}
+                        <a href="{{ section.path }}">{{ section.name }}</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>
+                <a href="/conclusion">おわりに</a>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="{{ site.data.book.chapters | size }}">
+                <a href="/appendix/">Appendix</a>
+            </th>
+        </tr>
     </table>
 </section>
