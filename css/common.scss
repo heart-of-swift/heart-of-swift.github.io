@@ -125,6 +125,16 @@ small {
   color: $weak-color;
 }
 
+ul.paging {
+  margin-left: 0;
+  li {
+    list-style-type: none;
+  }
+  span.icon {
+    font-weight: bold;
+  }
+}
+
 .site-header {
     border-top-style: none;
 }

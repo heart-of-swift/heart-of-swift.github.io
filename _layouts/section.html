@@ -34,11 +34,11 @@ layout: default
 
 <hr />
 
-<ul>
+<ul class="paging">
     {% if next_section %}
-    <li>次のページ: <a href="{{ next_section.path }}">{{ next_section.name }}</a></li>
+    <li><a href="{{ next_section.path }}">{{ next_section.name }}</a> <span class="icon">→</span></li>
     {% endif %}
     {% if prev_section %}
-    <li>前のページ: <a href="{{ prev_section.path }}">{{ prev_section.name }}</a></li>
+    <li><span class="icon">←</span> <a href="{{ prev_section.path }}">{{ prev_section.name }}</a></li>
     {% endif %}
 </ul>
