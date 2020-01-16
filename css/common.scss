@@ -7,6 +7,7 @@ $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
 $weak-color: #7F7F7F;
 $disabled-color: #BFBFBF;
+$demo-border-color: #DFDFDF;
 
 .site-nav {
     float: right;
@@ -82,6 +83,9 @@ h2 {
 
 h3 {
     font-size: 1.6em;
+    >code {
+      font-size: 1.0em;
+    }
 }
 
 .post-content h3 {
@@ -90,6 +94,9 @@ h3 {
 
 h4 {
     font-size: 1.4em;
+    >code {
+      font-size: 0.9em;
+    }
 }
 
 .post-content h4 {
@@ -114,6 +121,10 @@ hr {
     margin-bottom: 1em;
 }
 
+small {
+  color: $weak-color;
+}
+
 .site-header {
     border-top-style: none;
 }
@@ -128,4 +139,11 @@ hr {
 
 .site-nav span.page-link {
     color: $disabled-color;
+}
+
+.html-demo {
+  margin: 20px 0 20px 0;
+  padding: 10px;
+  border: solid 1px $demo-border-color;
+  border-radius: 3px;
 }

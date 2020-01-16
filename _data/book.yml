@@ -10,11 +10,13 @@ chapters:
         path: "/value-semantics/how-to-use-value-types"
   - name: "Protocol-oriented Programming"
     path: "/protocol-oriented-programming/"
-    is_draft: true
     sections:
       - name: "Protocol-oriented Programming とは"
         path: "/protocol-oriented-programming/"
-        is_draft: true
+      - name: "「型として」・「制約として」のプロトコルの使い分け"
+        path: "/protocol-oriented-programming/protocols-as-types-or-constraints"
+      - name: "プロトコルとリバースジェネリクス"
+        path: "/protocol-oriented-programming/protocols-and-reverse-generics"
 appendix:
   - name: "防御的コピー"
     is_draft: true
