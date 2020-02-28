@@ -8,6 +8,7 @@ $hr-color: rgb(232, 232, 232);
 $weak-color: #7F7F7F;
 $disabled-color: #BFBFBF;
 $demo-border-color: #DFDFDF;
+$summary-topic-border-color: #CDCDCD;
 
 .site-nav {
     float: right;
@@ -156,4 +157,17 @@ ul.paging {
   padding: 10px;
   border: solid 1px $demo-border-color;
   border-radius: 3px;
+}
+
+.summary {
+  margin: 20px 0 20px 0;
+}
+
+.summary-topic {
+  width: 256px;
+  height: 256px;
+  border-radius: 138px;
+  border: solid 10px $summary-topic-border-color;
+  overflow: hidden;
+  margin: 20px 0 20px 0;
 }
