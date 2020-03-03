@@ -7,6 +7,7 @@ $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
 $header-border-color: $hr-color;
 $chapter-border-color: rgb(17, 17, 17);
+$video-border-color: $hr-color;
 $weak-color: #7F7F7F;
 $disabled-color: #BFBFBF;
 $demo-border-color: #DFDFDF;
@@ -167,6 +168,12 @@ div.chapter {
     border: solid 1.5px $chapter-border-color;
     border-radius: 2em;
   }
+}
+
+div.video {
+  margin-bottom: 15px;
+  background-color: black;
+  border: solid 1px $video-border-color;
 }
 
 .site-header {
