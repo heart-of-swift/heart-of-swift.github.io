@@ -31,7 +31,7 @@ layout: default
 {% assign next_section=next_chapter.sections[0] %}
 {% endif %}
 
-<h1>{{ chapter.name }}</h1>
+<h1>第 {{ page.chapter_index | plus: 1 }} 章&nbsp;&nbsp;{{ chapter.name }}</h1>
 <ul>
     {% for a_section in chapter.sections %}
     <li>

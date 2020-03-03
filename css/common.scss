@@ -2,6 +2,7 @@
 ---
 
 $theme-color: #F05136;
+$header-border-color: #CDCDCD;
 $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
@@ -76,6 +77,10 @@ h2 {
 
 h3 {
     font-size: 1.6em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: solid 1px $header-border-color;
+    border-left: solid 0.4em $theme-color;
     >code {
       font-size: 1.0em;
     }
@@ -83,6 +88,10 @@ h3 {
 
 h4 {
     font-size: 1.4em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: solid 1px $header-border-color;
+    border-left: solid 0.4em $header-border-color;
     >code {
       font-size: 0.9em;
     }
@@ -90,6 +99,13 @@ h4 {
 
 h5 {
     font-size: 1.2em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: dashed 1px $header-border-color;
+    border-left: solid 0.2em $header-border-color;
+    >code {
+      font-size: 0.9em;
+    }
 }
 
 pre,code {
@@ -144,7 +160,13 @@ ul.paging {
 }
 
 .summary {
-  margin: 20px 0 20px 0;
+  margin: 40px 0 0 0;
+  width: 100%;
+  text-align: center;
+
+  img {
+    max-width: 512px;
+  }
 }
 
 .summary-topic {
