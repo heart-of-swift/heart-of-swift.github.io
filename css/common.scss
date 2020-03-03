@@ -5,6 +5,8 @@ $theme-color: #F05136;
 $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
+$header-border-color: $hr-color;
+$chapter-border-color: rgb(17, 17, 17);
 $weak-color: #7F7F7F;
 $disabled-color: #BFBFBF;
 $demo-border-color: #DFDFDF;
@@ -70,42 +72,64 @@ h1 {
     font-size: 2.4em;
 }
 
-h1.post-title {
-    font-size: 2.4em;
-}
-
 h2 {
     font-size: 1.8em;
 }
 
-.post-content h2 {
-    font-size: 1.8em;
-}
-
 h3 {
-    font-size: 1.6em;
-    >code {
-      font-size: 1.0em;
-    }
-}
-
-.post-content h3 {
-    font-size: 1.6em;
+  font-size: 1.6em;
 }
 
 h4 {
-    font-size: 1.4em;
-    >code {
-      font-size: 0.9em;
-    }
-}
-
-.post-content h4 {
-    font-size: 1.4em;
+  font-size: 1.4em;
 }
 
 h5 {
+  font-size: 1.2em;
+}
+
+.page-content {
+  h2 {
+    font-size: 1.6em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: solid 1px $header-border-color;
+    border-left: solid 0.4em $theme-color;
+    >code {
+      font-size: 1.0em;
+    }
+  }
+  
+  h3 {
+    font-size: 1.4em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: solid 1px $header-border-color;
+    border-left: solid 0.4em $header-border-color;
+    >code {
+      font-size: 0.9em;
+    }
+  }
+  
+  h4 {
     font-size: 1.2em;
+    margin-top: 2.0em;
+    padding: 0.5em;
+    border: dashed 1px $header-border-color;
+    border-left: solid 0.2em $header-border-color;
+    >code {
+      font-size: 0.9em;
+    }
+  }
+
+  .home {
+    h2 {
+      font-size: 1.8em;
+      margin: 0 0 15px 0;
+      padding: 0;
+      border: none;
+    }
+  }
 }
 
 pre,code {
@@ -136,6 +160,15 @@ ul.paging {
   }
 }
 
+div.chapter {
+  margin-bottom: 20px;
+  span {
+    padding: 8px 16px;
+    border: solid 1.5px $chapter-border-color;
+    border-radius: 2em;
+  }
+}
+
 .site-header {
     border-top-style: none;
 }
@@ -160,7 +193,13 @@ ul.paging {
 }
 
 .summary {
-  margin: 20px 0 20px 0;
+  margin: 40px 0 0 0;
+  width: 100%;
+  text-align: center;
+
+  img {
+    max-width: 512px;
+  }
 }
 
 .summary-topic {

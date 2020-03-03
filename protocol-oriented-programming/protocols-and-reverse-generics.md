@@ -10,7 +10,7 @@ section_index: 2
 
 本節では、制約としてのプロトコルと _リバースジェネリクス_ および _Opaque Result Type_ の関係を説明し、プロトコルを使ったコード抽象化の全体像を示します。
 
-### 制約としてのプロトコルに欠けていた抽象化
+## 制約としてのプロトコルに欠けていた抽象化
 
 [前節]({{ prev_section.path }})まで見てきたように、 Swift にとっては制約としてのプロトコルが適しています。実際、 Swift の標準ライブラリでも制約としてのプロトコルが広く使われており、ほとんどすべてのプロトコルが制約として使用されています。
 
@@ -138,7 +138,7 @@ extension Array: Sequence {
 
 つまり、今望んでいるのは、 **抽象的にコードを書きながら、具象型と同じパフォーマンスがほしい** ということです。
 
-### 抽象的なコードと具象型のパフォーマンス（引数の場合）
+## 抽象的なコードと具象型のパフォーマンス（引数の場合）
 
 似たような話が前にもありました。ジェネリック関数です。プロトコルを制約として使ってコードを抽象化することで、具象型と同等のパフォーマンスを得ることができました。
 
@@ -160,7 +160,7 @@ func useAnimal(_ animal: Cat) {
 
 これと同じようなアプローチで、 `makeIterator` メソッドにおいても抽象的なコードと具象型のパフォーマンスを両立できないでしょうか。
 
-### 抽象的なコードと具象型のパフォーマンス（戻り値の場合）
+## 抽象的なコードと具象型のパフォーマンス（戻り値の場合）
 
 `makeIterator` メソッドと先の `useAnimal` 関数の違いは、抽象化するのが戻り値の型なのか引数の型なのかという点です。ただ、 `makeIterator` メソッドは `useAnimal` 関数と違って複雑です。関数ではなくメソッドですし、プロトコルによって宣言されています。また、 `IteratorProtocol` の `associatedtype` である `Element` も関係しています。まずはよりシンプルな例を考えてみましょう。
 
@@ -285,7 +285,7 @@ var iterator: IndexingIterator<[Int]>
 var iterator = [2, 3, 5].makeIterator() // ✅
 ```
 
-### Opaque Result Type
+## Opaque Result Type
 
 _リバースジェネリクス_ を使えば抽象的な戻り値と具象型のパフォーマンスを両立できますが、必ずしもシンタックスがわかりやすいとは言えません。 `makeAnimal` 関数が何らかの `Animal` を返す場合、それを意味するコードは次の通りです。
 
@@ -311,7 +311,7 @@ _Opaque Result Type_ は _リバースジェネリクス_ を簡潔に書くた�
 
 _Opaque Result Type_ は [SE-0244](https://github.com/apple/swift-evolution/blob/master/proposals/0244-opaque-result-types.md) で部分的に採択され、 Swift 5.1 でサポートされました。「部分的に」というのは、 Swift 5.1 時点では `some Sequence<.Element == Int>` のように `associatedtype` を指定したり、 `Set<some Animal>` や `[some Animal]` 、 `(some Animal)?` のように型パラメータを埋めるときに `some` を使うことができないからです。これらの機能については SE-0244 や "Improving the UI of generics" の中で言及されており、 "first step" として _Opaque Result Type_ の部分的な機能を導入すると述べられているため、将来的に導入される可能性が高いと考えられます。
 
-### Opaque Argument Type
+## Opaque Argument Type
 
 _Opaque Result Type_ を使えば _リバースジェネリクス_ を簡潔に記述できました。同じことは通常のジェネリクスについても言えるはずです。ジェネリックな引数を `some` を使って簡潔に書けるようにしようというのが **_Opaque Argument Type_** です。
 
@@ -337,7 +337,7 @@ _Opaque Result Type_ と _リバースジェネリクス_ の関係と同じよ�
 
 なお、 _Opaque Argument Type_ は Swift 5.1 ではサポートされていません。 _Opaque Result Type_ の完全なサポート同様、今後導入される可能性が高そうです。
 
-### ジェネリクスでしかできないこと
+## ジェネリクスでしかできないこと
 
 _Opaque Result Type_ と _Opaque Argument Type_ を合わせて **_Opaque Type_** と呼びます。 _Opaque Type_ がジェネリクス（ _リバースジェネリクス_ を含みます）のシンタックスシュガーなら、 _Opaque Type_ さえあればジェネリクスは不要なのでしょうか。そうではありません。ジェネリクスでしかできないことの例を見てみましょう。
 
@@ -374,7 +374,7 @@ func useAnimalPair<A1: Animal, A2: Animal>(_ pair: (A1, A2)) { // これでは�
 
 このように、 **_Opaque Type_ ではなくジェネリクスでしかできないこともあります。 _Opaque Type_ はジェネリクスでできることの一部を簡潔に書くための手段でしかありません。** このことからも、筆者はいずれ _リバースジェネリクス_ は採択されるだろうと考えています。 _Opaque Result Type_ が完全にサポートされても、 _リバースジェネリクス_ でしかできないことが存在するからです。
 
-### Opaque Type と `some`
+## Opaque Type と `some`
 
  _Opaque Type_ には `some` というキーワードを使いますが、筆者はこのキーワードの選び方が秀逸だと考えています。
 
@@ -398,7 +398,7 @@ func useAnimals(_ animals: [some Animal]) {
 
 この関数の引数 `animals` は、 _Homogeneous_ な（同種の値しか格納できない） `Array` です。「ある（ some ） `Animal` 」の `Array` がある一種類の `Animal` のインスタンスしか格納できないことは、言語的に自然です。
 
-### SwiftUI と Opaque Type
+## SwiftUI と Opaque Type
 
 Swift 5.1 と同時に [SwiftUI](https://developer.apple.com/documentation/swiftui) がリリースされました。 SwiftUI で初めて _Opaque Result Type_ に触れたという人も多いのではないかと思います。 _Opaque Result Type_ のユースケースの例として、 SwiftUI の中で _Opaque Result Type_ がどのように使われているのか、それがないと何が起こるかを見てみましょう。
 
@@ -572,7 +572,7 @@ struct RainbowSquare: View {
 
 そのような理由で、 _Opaque Result Type_ は SwiftUI で欠かせない役割を果たしています。
 
-### Opaque Type と Existential Type
+## Opaque Type と Existential Type
 
 ここで _Opaque Type_ と _Existential Type_ の関係を整理しておきたいと思います。どちらも抽象化のために使用されます。
 
@@ -660,7 +660,7 @@ useAnimals([Cat(), Dog()]) // ✅
 
 つまり、 _Opaque Type_ と _Existential Type_ という型システム上の概念が、 `some` と `any` というキーワードによって言語的にも対応しているわけです。シンタックスがセマンティクスを自然に表しているという意味で、すばらしいキーワード選定だと言えるのではないでしょうか。
 
-### まとめ
+## まとめ
 
 本節では _リバースジェネリクス_ 、 _Opaque Type_ 、 _Existential Type_ など多くの項目を扱いましたが、それらの関係を表にまとめると次のようになります。
 

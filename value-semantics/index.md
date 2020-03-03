@@ -18,7 +18,7 @@ section_index: 0
 
 コードを使って例を挙げてみます。
 
-### Value Semantics を持つ例
+## Value Semantics を持つ例
 
 `value` という Stored Property を一つだけ持つシンプルな `struct` 、 `Foo` を考えてみます。
 
@@ -46,7 +46,7 @@ _値型_ のインスタンスは変数に直接格納されています。イ�
 
 今、 `a` と `b` は変更に対して独立である、つまり、 `a` と `b` のどちらかに変更を加えてももう一方には影響を及ぼさないので、 `Foo` は _Value Semantics_ を持っていると言えます。
 
-### Value Semantics を持たない例
+## Value Semantics を持たない例
 
 次に、 _Value Semantics_ を持たない例を見てみます。先程のコードの `struct` だった部分を `class` に変更します。それ以外はまったく同じです。
 
@@ -70,7 +70,7 @@ _参照型_ のインスタンスは変数に直接格納されません。イ�
 
 このように、片一方を変更するともう一方も変更される場合、 _Value Semantics_ と対比して、その型は **_Reference Semantics_** を持っていると言われます。
 
-### Semantics vs Type
+## Semantics vs Type
 
 先の例や名前からも推測できる通り、 _Value Semantics_ は _値型（ Value Type ）_ と、 _Reference Semantics_ は _参照型（ Reference Type ）_ と深い関係があります。しかし、これらは同じものではありません。混同してしまわないように注意が必要です。
 
@@ -79,7 +79,7 @@ _参照型_ のインスタンスは変数に直接格納されません。イ�
 
 たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ だけど _Reference Semantics_ を持つ型も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
 
-### 値型だけど Value Semantics を持たない例
+## 値型だけど Value Semantics を持たない例
 
 Semantics と Type を区別して考えるために、値型だけれども _Value Semantics_ を持たない例を見てみましょう。
 
@@ -124,7 +124,7 @@ a.bar.value = 3 // 👈
 - `AVAudioPlayer`
 - `CMMotionManager`
 
-### 参照型プロパティを持つ値型でも Value Semantics を持つ例
+## 参照型プロパティを持つ値型でも Value Semantics を持つ例
 
 先の例は、一見 _参照型_ のプロパティを持ったことが _Value Semantics_ を失った原因のように思えます。しかし、 _参照型_ のプロパティを持つことで必ずしも _Value Semantics_ が失われるわけではありません。次は、 _参照型_ のプロパティを持つ _値型_ が _Value Semantics_ を持つ例を見てみます。
 
@@ -155,7 +155,7 @@ a.bar.value = 3 // ⛔
 - `UIImage`
 - `KeyPath`
 
-### イミュータビリティと Semantics
+## イミュータビリティと Semantics
 
 _イミュータブルクラス_ 自体の Semantics はどのように考えれば良いでしょうか。
 
@@ -185,7 +185,7 @@ struct Foo {
 }
 ```
 
-### ミュータブルな参照型をプロパティに持つけど Value Semantics を持つ例
+## ミュータブルな参照型をプロパティに持つけど Value Semantics を持つ例
 
 先程の例では、 _ミュータブル_ な _参照型_ のプロパティを持つ場合は _Value Semantics_ を持ちませんでした。
 
@@ -204,7 +204,7 @@ class Bar {
 
 _Value Semantics_ を持つかどうかはパターンで判断するのではなく、定義に基づいて判断することが大切です。
 
-### まとめ
+## まとめ
 
 Swift における _Value Semantics_ の定義は、ある型が _Value Semantics_ を持つとき、その型の値が変更に対して独立であるということです。
 
