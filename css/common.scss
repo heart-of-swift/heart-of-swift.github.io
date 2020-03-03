@@ -2,10 +2,11 @@
 ---
 
 $theme-color: #F05136;
-$header-border-color: #CDCDCD;
 $code-background-color: #F5F5F5;
 $code-border-color: #F3F3F3;
 $hr-color: rgb(232, 232, 232);
+$header-border-color: $hr-color;
+$chapter-border-color: rgb(17, 17, 17);
 $weak-color: #7F7F7F;
 $disabled-color: #BFBFBF;
 $demo-border-color: #DFDFDF;
@@ -138,6 +139,11 @@ ul.paging {
 
 div.chapter {
   margin-bottom: 20px;
+  span {
+    padding: 8px 16px;
+    border: solid 1.5px $chapter-border-color;
+    border-radius: 2em;
+  }
 }
 
 .site-header {
