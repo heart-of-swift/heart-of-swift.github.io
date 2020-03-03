@@ -77,6 +77,19 @@ h2 {
 }
 
 h3 {
+  font-size: 1.6em;
+}
+
+h4 {
+  font-size: 1.4em;
+}
+
+h5 {
+  font-size: 1.2em;
+}
+
+.page-content {
+  h2 {
     font-size: 1.6em;
     margin-top: 2.0em;
     padding: 0.5em;
@@ -85,9 +98,9 @@ h3 {
     >code {
       font-size: 1.0em;
     }
-}
-
-h4 {
+  }
+  
+  h3 {
     font-size: 1.4em;
     margin-top: 2.0em;
     padding: 0.5em;
@@ -96,9 +109,9 @@ h4 {
     >code {
       font-size: 0.9em;
     }
-}
-
-h5 {
+  }
+  
+  h4 {
     font-size: 1.2em;
     margin-top: 2.0em;
     padding: 0.5em;
@@ -107,6 +120,16 @@ h5 {
     >code {
       font-size: 0.9em;
     }
+  }
+
+  .home {
+    h2 {
+      font-size: 1.8em;
+      margin: 0 0 15px 0;
+      padding: 0;
+      border: none;
+    }
+  }
 }
 
 pre,code {

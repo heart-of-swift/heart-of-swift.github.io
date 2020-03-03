@@ -36,7 +36,7 @@ func useAnimal<A: Animal>(_ animal: A) {
 
 本節では、型としてのプロトコルでしかできないこと・制約としてのプロトコルでしかできないことを示し、それらの使い分けについて説明します。
 
-### 型としてのプロトコルでしかできないこと
+## 型としてのプロトコルでしかできないこと
 
 まず、型としてのプロトコルでしかできないことの例を見てみます。
 
@@ -87,7 +87,7 @@ useAnimals([Dog(), Dog()]) // ✅ [Dog] を渡す（ A は Dog）
 
 このように、 **_Heterogeneous Collection_ が必要な場合には、プロトコルを制約として使うのではなく型として使う** 必要があります。
 
-#### 型パラメータ `A` に `Animal` を当てはめられない理由
+### 型パラメータ `A` に `Animal` を当てはめられない理由
 
 どうして型パラメータ `A` には `Cat` や `Dog` のような具体的な型しか当てはめられないのでしょうか。 `A` に `Animal` を当てはめることができれば、先の `useAnimals` に `[Animal]` 型の値を渡すことができます。
 
@@ -119,7 +119,7 @@ func useAnimal<A: Animal>(_ animal: A) {
 
 そのような理由から、 Swift ではプロトコルの _Self-conformance_ はサポートされていません。ただし、例外的に [SE-0235](https://github.com/apple/swift-evolution/blob/master/proposals/0235-add-result.md) で `Error` プロトコルに _Self-conformance_ が[追加されました](https://github.com/apple/swift-evolution/blob/master/proposals/0235-add-result.md#adding-swifterror-self-conformance)）。今後、 _Self-conformance_ が問題にならないケースでは _Self-conformance_ がサポートされる可能性があります。
 
-#### Heterogeneous Collection の具体例
+### Heterogeneous Collection の具体例
 
 型としてのプロトコルが必要になるケースとして、 _Heterogeneous Collection_ を挙げました。では、実際にどのような場合に _Heterogeneous Collection_ を使いたくなるのでしょうか。
 
@@ -193,7 +193,7 @@ let viewGroup = ViewGroup<???>([ // ??? のところに View とは書けない
 
 この例のように、型としてのプロトコルが適切なケースでは、制約としてのプロトコルにこだわる必要はありません。無理やり制約としてのプロトコルを使っても、冗長でわかりづらいコードになってしまいます。素直に型としてのプロトコルを使用するのが良いでしょう。
 
-##### Generalized Existential と型消去
+#### Generalized Existential と型消去
 
 [SwiftUI](https://developer.apple.com/documentation/swiftui) に親しんだ読者の中には、先の `View` プロトコルの例に違和感を覚える方もいるかもしれません。
 
@@ -226,7 +226,7 @@ let views: [AnyView] = [AnyView(Text("...")), AnyView(Image("..."))] // ✅
 
 Swift の標準ライブラリにも、 `AnySequence` や `AnyHashable` などの型が用意されています。
 
-### 制約としてのプロトコルでしかできないこと
+## 制約としてのプロトコルでしかできないこと
 
 ここまで、型としてのプロトコルでしかできないことを見てきました。次に、制約としてのプロトコルでしかできないことを見てみましょう。
 
@@ -325,7 +325,7 @@ extension Sequence where Element: Equatable { // Equatable が制約として使
 
 このように、制約としてのプロトコルでしかできないこともあります。
 
-### まとめ
+## まとめ
 
 [前節]({{ prev_section.path }})から見てきたように、プロトコルは型としても制約としても使うことができます。型としてのプロトコルは、 _値型_ にとって実行時のオーバーヘッドが大きいので、どちらでも良いケースでは制約としてプロトコルを使用する方が Swift に適しています。しかし、すべてのケースを制約として書けるわけではありません。「型として」・「制約として」のプロトコルを適切に使い分ける必要があります。
 

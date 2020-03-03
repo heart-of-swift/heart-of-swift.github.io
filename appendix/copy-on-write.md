@@ -1,7 +1,6 @@
 ---
 layout: page
+title: Copy-on-Write
 ---
-
-### Copy-on-Write
 
 （準備中）

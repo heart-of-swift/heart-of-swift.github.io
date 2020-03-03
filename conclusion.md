@@ -11,7 +11,7 @@ title: おわりに
 
 <div class="summary"><img alt="Heart の形の本書のまとめ" src="img/swift-heart-summary.png" /></div>
 
-### 原点
+## 原点
 
 この図の根底にある、原点とも言えるものが _Value Semantics_ と _値型_ です。
 
@@ -19,7 +19,7 @@ title: おわりに
 
 - [第 1 章&nbsp;&nbsp;{{ site.data.book.chapters[0].name }}]({{ site.data.book.chapters[0].path }})
 
-#### Value Semantics
+### Value Semantics
 
 <div class="summary-topic"><img alt="Value Semantics" src="img/swift-heart-summary.png" style="transform: scale(3, 3) translate(-32%, -40%);" /></div>
 
@@ -32,7 +32,7 @@ title: おわりに
 - [{{ site.data.book.chapters[0].sections[0].name }}]({{ site.data.book.chapters[0].sections[0].path }})
 - [{{ site.data.book.chapters[0].sections[1].name }}]({{ site.data.book.chapters[0].sections[1].path }})
 
-#### 値型
+### 値型
 
 <div class="summary-topic"><img alt="値型" src="img/swift-heart-summary.png" style="transform: scale(3, 3) translate(-28%, -34%);" /></div>
 
@@ -44,7 +44,7 @@ _値型_ は、 _ミュータブルクラス_ の持つ状態変更の簡潔さ�
 
 - [{{ site.data.book.chapters[0].sections[1].name }}]({{ site.data.book.chapters[0].sections[1].path }})
 
-### 値型中心の世界を実現
+## 値型中心の世界を実現
 
 <div class="summary-topic"><img alt="値型中心の世界を実現" src="img/swift-heart-summary.png" style="transform: scale(1.4, 1.4) translate(17%, -34%);" /></div>
 
@@ -56,7 +56,7 @@ _値型_ を使うことで _ミュータブルクラス_ と _イミュータ�
 
 - [第 1 章&nbsp;&nbsp;{{ site.data.book.chapters[0].name }}]({{ site.data.book.chapters[0].path }})
 
-#### 値型のコレクション
+### 値型のコレクション
 
 <div class="summary-topic"><img alt="値型のコレクション" src="img/swift-heart-summary.png" style="transform: scale(3, 3) translate(-7%, -29%);" /></div>
 
@@ -70,7 +70,7 @@ Swift 標準ライブラリのコレクションは、 _Copy-on-Write_ を用い
 
 - [{{ site.data.book.chapters[0].sections[2].name }}]({{ site.data.book.chapters[0].sections[2].path }})
 
-#### 値型を使いやすくする機能
+### 値型を使いやすくする機能
 
 <div class="summary-topic"><img alt="値型を使いやすくする機能" src="img/swift-heart-summary.png" style="transform: scale(3, 3) translate(25%, -15%);" /></div>
 
@@ -89,7 +89,7 @@ Swift 標準ライブラリのコレクションは、 _Copy-on-Write_ を用い
 
 - [{{ site.data.book.chapters[0].sections[2].name }}]({{ site.data.book.chapters[0].sections[2].path }})
 
-### 値型前提の抽象化を実現
+## 値型前提の抽象化を実現
 
 <div class="summary-topic"><img alt="制約としてのプロトコル" src="img/swift-heart-summary.png" style="transform: scale(1.2, 1.2) translate(-23%, 19%);" /></div>
 
@@ -101,7 +101,7 @@ Heart の図のもう一つの軸が、上方向に伸びる **「値型前提�
 
 - [第 2 章&nbsp;&nbsp;{{ site.data.book.chapters[1].name }}]({{ site.data.book.chapters[1].path }})
 
-#### 制約としてのプロトコル
+### 制約としてのプロトコル
 
 <div class="summary-topic"><img alt="制約としてのプロトコル" src="img/swift-heart-summary.png" style="transform: scale(3, 3) translate(-26%, -17%);" /></div>
 
@@ -117,7 +117,7 @@ _Protocol-oriented Programming_ には明確な定義がないですが、本書
 - [{{ site.data.book.chapters[1].sections[1].name }}]({{ site.data.book.chapters[1].sections[1].path }})
 
 
-#### 戻り値の型の抽象化
+### 戻り値の型の抽象化
 
 <div class="summary-topic"><img alt="戻り値の型の抽象化" src="img/swift-heart-summary.png" style="transform: scale(2.8, 2.8) translate(-25%, 4%);" /></div>
 
@@ -127,7 +127,7 @@ _パラメトリックポリモーフィズム_ による抽象化を実現す�
 
 - [{{ site.data.book.chapters[1].sections[2].name }}]({{ site.data.book.chapters[1].sections[2].path }})
 
-#### 引数の型の抽象化
+### 引数の型の抽象化
 
 <div class="summary-topic"><img alt="引数の型の抽象化" src="img/swift-heart-summary.png" style="transform: scale(2.8, 2.8) translate(-23%, 31%);" /></div>
 
@@ -137,7 +137,7 @@ _Opaque Result Type_ は戻り値の型についてのものでしたが、同�
 
 - [{{ site.data.book.chapters[1].sections[2].name }}]({{ site.data.book.chapters[1].sections[2].path }})
 
-#### Opaque Type と Existential Type
+### Opaque Type と Existential Type
 
 <div class="summary-topic"><img alt="Opaque Type と Existential Type" src="img/swift-heart-summary.png" style="transform: scale(2.4, 2.4) translate(13%, 16%);" /></div>
 
@@ -150,7 +150,7 @@ _Opaque Type_ には `some` 、 _Existential Type_ には `any` というキー�
 
 - [{{ site.data.book.chapters[1].sections[2].name }}]({{ site.data.book.chapters[1].sections[2].path }})
 
-### まとめ
+## まとめ
 
 このように、本書は _Value Semantics_ と _値型_ を原点に、「値型中心の世界」と「値型前提の抽象化」の実現という二つの軸で、 Swift という言語の Heart を説明してきました。
 
