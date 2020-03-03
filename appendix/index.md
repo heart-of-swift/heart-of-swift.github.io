@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Appendix
+title: 付録
 ---
 
 {% for item in site.data.book.appendix %}
