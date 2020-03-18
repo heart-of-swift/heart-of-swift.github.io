@@ -1,0 +1,14 @@
+<ul class="paging">
+    {% if include.next %}
+    <li>
+        <a href="{{ include.next.path }}">{{ include.next.name }}</a>
+        <span class="icon">→</span>
+    </li>
+    {% endif %}
+    {% if include.prev %}
+    <li><span class="icon">
+        ←</span>
+        <a href="{{ include.prev.path }}">{{ include.prev.name }}</a>
+    </li>
+    {% endif %}
+</ul>

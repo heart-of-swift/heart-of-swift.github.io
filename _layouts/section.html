@@ -1,5 +1,11 @@
 ---
 layout: default
+introduction_item:
+    path: '/#introduction'
+    name: 'はじめに'
+conclusion_item:
+    path: '/conclusion'
+    name: 'おわりに'
 ---
 
 {% assign chapters=site.data.book.chapters %}
@@ -31,6 +37,18 @@ layout: default
 {% assign next_section=next_chapter.sections[0] %}
 {% endif %}
 
+{% if prev_section %}
+{% assign prev_item=prev_section %}
+{% else %}
+{% assign prev_item=layout.introduction_item %}
+{% endif %}
+
+{% if next_section %}
+{% assign next_item=next_section %}
+{% else %}
+{% assign next_item=layout.conclusion_item %}
+{% endif %}
+
 <div class="chapter"><span>第 {{ page.chapter_index | plus: 1 }} 章&nbsp;&nbsp;{{ chapter.name }}</span></div>
 
 <ul>
@@ -53,21 +71,4 @@ layout: default
 
 <hr />
 
-<ul class="paging">
-    <li>
-        {% if next_section %}
-        <a href="{{ next_section.path }}">{{ next_section.name }}</a>
-        {% else %}
-        <a href="/conclusion">おわりに</a>
-        {% endif %}
-        <span class="icon">→</span>
-    </li>
-    <li><span class="icon">
-        ←</span>
-        {% if prev_section %}
-        <a href="{{ prev_section.path }}">{{ prev_section.name }}</a>
-        {% else %}
-        <a href="/#introduction">はじめに</a>
-        {% endif %}
-    </li>
-</ul>
+{% include pager.html next=next_item prev=prev_item %}
