@@ -1,6 +1,9 @@
 ---
 layout: page
 title: おわりに
+next_item:
+    name: '付録'
+    path: '/appendix/'
 ---
 
 本書では、 Swift の根幹である _Value Semantics_ と _Protocol-oriented Programming_ に焦点を当て、 Swift とはどのような言語なのかを説明してきました。そのことを、 ["はじめに"](/#introduction) では
@@ -157,3 +160,8 @@ _Opaque Type_ には `some` 、 _Existential Type_ には `any` というキー�
 Swift は決して難解な言語ではないですが、 _参照型_ 中心の言語が多い中では、 _値型_ を中心とした特徴的な言語だと言えます。言語を使いこなすには、その言語独自の考え方を理解することが欠かせません。
 
 本書が Swift という言語を理解する手助けになったなら幸いです。
+
+<hr />
+
+{% assign prev_item=site.data.book.chapters[1].sections[2] %}
+{% include pager.html next=page.next_item prev=prev_item %}
