@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "Value Semantics を持たない型の問題と対処法"
 chapter_index: 0
 section_index: 1
 ---

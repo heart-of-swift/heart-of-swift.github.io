@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "Protocol-oriented Programming とは"
 chapter_index: 1
 section_index: 0
 ---

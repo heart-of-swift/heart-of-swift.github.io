@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "Value Semantics とは"
 chapter_index: 0
 section_index: 0
 ---

@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "「型として」・「制約として」のプロトコルの使い分け"
 chapter_index: 1
 section_index: 1
 ---

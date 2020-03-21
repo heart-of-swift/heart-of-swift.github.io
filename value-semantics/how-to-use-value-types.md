@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "Swift が値型中心の言語になれた理由とその使い方"
 chapter_index: 0
 section_index: 2
 ---

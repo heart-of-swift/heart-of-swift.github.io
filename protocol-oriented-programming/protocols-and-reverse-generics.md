@@ -1,5 +1,6 @@
 ---
 layout: section
+title: "プロトコルとリバースジェネリクス"
 chapter_index: 1
 section_index: 2
 ---
