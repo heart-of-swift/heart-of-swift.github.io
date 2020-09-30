@@ -78,7 +78,7 @@ _参照型_ のインスタンスは変数に直接格納されません。イ�
 - _Value Semantics_ ≠ _値型（ Value Type ）_
 - _Reference Semantics_ ≠ _参照型（ Reference Type ）_
 
-たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ だけど _Reference Semantics_ を持つ型も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
+たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ だけど _Reference Semantics_ を持たない型も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
 
 ## 値型だけど Value Semantics を持たない例
 
