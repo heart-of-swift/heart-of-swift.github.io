@@ -5,11 +5,14 @@ chapter_index: 0
 section_index: 0
 ---
 
-**_Value Semantics_** という用語は C++ などの言語で用いられることが多いようです。しかし、 Swift における _Value Semantics_ は、それらとは少し異なるニュアンスを持っています。 WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) の中で Swift における _Value Semantics_ について詳しく説明されていますが、残念ながらその定義については述べられていません。 Swift における _Value Semantics_ の定義は、 [Swift のリポジトリ](https://github.com/apple/swift)の中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) に記載されています。
+**_Value Semantics_** という用語は C++ などの言語で用いられることが多いようです。しかし、 Swift における _Value Semantics_ は、それらとは少し異なるニュアンスを持っています。 Swift における _Value Semantics_ については、 WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) で詳しく説明されています。しかし残念ながら _Value Semantics_ の定義については述べられていません。では Swift における _Value Semantics_ の定義はどこにあるのでしょうか。それは、 [Swift リポジトリ](https://github.com/apple/swift)の中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) です。
 
-これは 201３ 年に書かれた古いドキュメントで、 [docs/proposals](https://github.com/apple/swift/blob/master/docs/proposals) という正式に認められていないドキュメントが収められたディレクトリの中にありますが、 Swift Core Team の Dave Abrahams さんがその著者であり、内容も WWDC で話されていることと一貫性があるので、信頼のおけるドキュメントだと筆者は考えています。
+"Value Semantics in Swift" は 201３ 年に書かれた古いドキュメントです。しかも、このドキュメントが収められた [docs/proposals](https://github.com/apple/swift/blob/master/docs/proposals) というディレクトリは、正式なドキュメントのためのものではありません。このドキュメントを信頼して良いのでしょうか。筆者は次の理由から、このドキュメントは信頼に足るものだと考えています。
 
-このドキュメントの中で、 _Value Semantics_ は次のように定義されています。
+- Swift Core Team の Dave Abrahams さんが著者であること
+- 内容に WWDC のセッションとの一貫性があること
+
+"Value Semantics in Swift" では、 Swift における _Value Semantics_ を次のように定義しています。
 
 > For a type with value semantics, variable initialization, assignment, and argument-passing each create an independently modifiable copy of the source value that is interchangeable with the source.
 >
@@ -21,7 +24,7 @@ section_index: 0
 
 ## Value Semantics を持つ例
 
-`value` という Stored Property を一つだけ持つシンプルな `struct` 、 `Foo` を考えてみます。
+Stored Property を一つだけ持つシンプルな `struct` 、 `Foo` を考えてみます。
 
 ```swift
 struct Foo {
@@ -37,19 +40,25 @@ var b = a
 a.value = 2
 ```
 
-このときに、 `b.value` も変更されるかというのが問題です。結論から言うと、 `Foo` は **_値型_** なので `a.value` を変更しても `b.value` は変更されません。
+このとき、 `b.value` も変更されるでしょうか。 _Value Semantics_ を持つなら
 
-_値型_ のインスタンスは変数に直接格納されています。インスタンスを表すバイト列が、メモリ上のその変数を表す領域に直接書かれているわけです。 _値型_ のインスタンスを変数に代入したときには、そのインスタンスを表すバイト列がコピーされて代入先の変数の領域にそのまま書き込まれます。これが _値型_ のインスタンスがコピーされる仕組みです。
+> どちらかを変更してももう片方には影響を与えない
 
-上記の例では、 `var b = a` をした時点で `a` の領域に格納されたバイト列が `b` の領域にコピーされるわけです。代入直後の時点では、 `a` と `b` には同じ内容のバイト列が書かれていますが、それらは内容が同じ別々の `Foo` インスタンスを表しています。 `a.value` を変更しても `a` の領域の `value` のバイト列が変更されるだけで、 `b.value` が変更されることはありません。
+ので、 `a.value` を変更しても `b.value` は変更されません。
+
+結論から言うと、このケースでは `b.value` は変更されません。なぜなら `Foo` は **_値型_** だからです。
+
+_値型_ のインスタンスは変数に直接格納されます。より具体的に言うと、インスタンスを表すバイト列が、変数を表すメモリ上の領域に直接書かれます。 _値型_ のインスタンスを変数に代入したときには、そのインスタンスを表すバイト列がコピーされて、代入先の変数の領域にそのまま書き込まれます。これが、代入によって _値型_ のインスタンスがコピーされる仕組みです。
+
+上記の例では、 `var b = a` をした時点で `a` の領域に格納されたバイト列が `b` の領域にコピーされます。そのため、代入直後は `a` と `b` にまったく同じ内容のバイト列が書かれています。しかし、それらは内容が同じだけで異なる領域に書かれた二つのデータです。つまり、 `a` と `b` は別々の `Foo` インスタンスを表しているということです。 `a.value` を変更しても `a` の領域の `value` のバイト列が変更されるだけで、 `b.value` が変更されることはありません。
 
 <img src="img/simple-value-type.png" alt="シンプルな値型と状態の変更" style="width: 278px; max-width: 100%;" />
 
-今、 `a` と `b` は変更に対して独立である、つまり、 `a` と `b` のどちらかに変更を加えてももう一方には影響を及ぼさないので、 `Foo` は _Value Semantics_ を持っていると言えます。
+この場合、 `a` と `b` は変更に対して独立である（ `a` と `b` のどちらかに変更を加えてももう一方には影響を及ぼさない）ので、 `Foo` は _Value Semantics_ を持っていると言えます。
 
 ## Value Semantics を持たない例
 
-次に、 _Value Semantics_ を持たない例を見てみます。先程のコードの `struct` だった部分を `class` に変更します。それ以外はまったく同じです。
+次に、 _Value Semantics_ を持たない例を見てみます。先程のコードの `struct` だった部分を `class` に変更してみましょう。それ以外はまったく同じです。
 
 ```swift
 class Foo {
@@ -63,13 +72,13 @@ a.value = 2
 
 この場合は、 `Foo` はクラスなので **_参照型_** です。そのため、 `a.value` を変更することで `b.value` も変更されてしまいます。
 
-_参照型_ のインスタンスは変数に直接格納されません。インスタンスの実体を表すバイト列はメモリ上の別の領域（ヒープ領域のどこか）に格納されていて、その領域を表すメモリのアドレスが変数に格納されます。たとえば、そのアドレスが `0x123DEF` だとすると、変数に実際に格納されているのは `0x123DEF` というアドレスを表すバイト列です。 `var b = a` では、 `a` に格納されたアドレス `0x123DEF` を表すバイト列が `b` にコピーされます。このとき、 `a` と `b` は同じアドレス `0x123DEF` を介して同一の `Foo` インスタンスを参照することになります。そのため、 `a.value` を変更すると `b.value` も変更されてしまうわけです。
+_値型_ と異なり、 _参照型_ のインスタンスは変数に直接格納されません。インスタンスの実体を表すバイト列はメモリ上の別の領域（ヒープ領域のどこか）に格納されていて、その領域を表すメモリのアドレスが変数に格納されます。たとえば、そのアドレスが `0x123DEF` だとすると、変数に実際に格納されているのは `0x123DEF` というアドレスを表すバイト列です。 `var b = a` では、 `a` に格納されたアドレス `0x123DEF` を表すバイト列が `b` にコピーされます。このとき、 `a` と `b` は同じアドレス `0x123DEF` によって同一の `Foo` インスタンスを参照することになります。そのため、 `a.value` を変更すると `b.value` も変更されてしまうわけです。
 
 <img src="img/simple-reference-type.png" alt="シンプルな参照型と状態の変更" style="width: 278px; max-width: 100%;" />
 
 この例では変更に対する独立性を持たないので、 `Foo` は _Value Semantics_ を持ちません。 
 
-このように、片一方を変更するともう一方も変更される場合、 _Value Semantics_ と対比して、その型は **_Reference Semantics_** を持っていると言われます。
+このように、片一方を変更するともう一方も変更され得る場合、 _Value Semantics_ と対比して、その型は **_Reference Semantics_** を持っていると言われます。
 
 ## Semantics vs Type
 
@@ -78,7 +87,7 @@ _参照型_ のインスタンスは変数に直接格納されません。イ�
 - _Value Semantics_ ≠ _値型（ Value Type ）_
 - _Reference Semantics_ ≠ _参照型（ Reference Type ）_
 
-たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ プロパティを持つ _値型_ でも _Value Semantics_ を持つ例も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
+たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ だけど _Value Semantics_ を持つ型も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
 
 ## 値型だけど Value Semantics を持たない例
 
@@ -97,7 +106,7 @@ class Bar {
 ```swift
 struct Foo {
     var value: Int = 0
-    var bar: Bar = Bar() // 👈
+    var bar: Bar = Bar() // 👈 Bar 型のプロパティを追加
 }
 ```
 
