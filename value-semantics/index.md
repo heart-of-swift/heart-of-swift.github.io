@@ -7,7 +7,7 @@ section_index: 0
 
 **_Value Semantics_** という用語は C++ などの言語で用いられることが多いようです。しかし、 Swift における _Value Semantics_ は、それらとは少し異なるニュアンスを持っています。 Swift における _Value Semantics_ については、 WWDC 2015 のセッション ["Building Better Apps with Value Types in Swift"](https://developer.apple.com/videos/play/wwdc2015/414/) で詳しく説明されています。しかし残念ながら _Value Semantics_ の定義については述べられていません。では Swift における _Value Semantics_ の定義はどこにあるのでしょうか。それは、 [Swift リポジトリ](https://github.com/apple/swift)の中のドキュメント ["Value Semantics in Swift"](https://github.com/apple/swift/blob/master/docs/proposals/ValueSemantics.rst) です。
 
-"Value Semantics in Swift" は 201３ 年に書かれた古いドキュメントです。しかも、このドキュメントが収められた [docs/proposals](https://github.com/apple/swift/blob/master/docs/proposals) というディレクトリは、正式なドキュメントのためのものではありません。このドキュメントを信頼して良いのでしょうか。筆者は次の理由から、このドキュメントは信頼に足るものだと考えています。
+"Value Semantics in Swift" は 2013 年に書かれた古いドキュメントです。しかも、このドキュメントが収められた [docs/proposals](https://github.com/apple/swift/blob/master/docs/proposals) というディレクトリは、正式なドキュメントのためのものではありません。このドキュメントを信頼して良いのでしょうか。筆者は次の理由から、このドキュメントは信頼に足るものだと考えています。
 
 - Swift Core Team の Dave Abrahams さんが著者であること
 - 内容に WWDC のセッションとの一貫性があること
