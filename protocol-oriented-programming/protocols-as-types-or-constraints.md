@@ -92,7 +92,7 @@ useAnimals([Dog(), Dog()]) // ✅ [Dog] を渡す（ A は Dog）
 
 どうして型パラメータ `A` には `Cat` や `Dog` のような具体的な型しか当てはめられないのでしょうか。 `A` に `Animal` を当てはめることができれば、先の `useAnimals` に `[Animal]` 型の値を渡すことができます。
 
-一般的に Swift の型システム上では、プロトコル型はそのプロトコル自体に適合しません。たとえば、 `Animal` 型は `Animal` プロトコル自体に適合しないので、次の `useAnumal` に `Animal` 型の値を渡すこともできません。
+一般的に Swift の型システム上では、プロトコル型はそのプロトコル自体に適合しません。たとえば、 `Animal` 型は `Animal` プロトコル自体に適合しないので、次の `useAnimal` に `Animal` 型の値を渡すこともできません。
 
 ```swift
 func useAnimal<A: Animal>(_ animal: A) { ... }
