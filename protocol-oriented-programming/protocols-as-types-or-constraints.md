@@ -215,7 +215,7 @@ Swift では `associatedtype` を持つプロトコルを型として使用す�
 let views: [View] = [Text("..."), Image("...")] // ⛔ コンパイルエラー
 ```
 
-しかし、 `assocatedtype` を持つプロトコルが型として使用できないのはコンパイラの実装上の都合です。理論上の問題があるわけではありません。将来的に、 `associatedtype` を持つプロトコルも型として使えるようにしようということが[議論されています](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#generalized-existentials)。そのような、 `associatedtype` を持ったプロトコルで表される型は **_Generalized Existential_** と呼ばれています。 _Generalized Existential_ がサポートされた場合、上記のコードはコンパイル可能なコードとなります。
+しかし、 `associatedtype` を持つプロトコルが型として使用できないのはコンパイラの実装上の都合です。理論上の問題があるわけではありません。将来的に、 `associatedtype` を持つプロトコルも型として使えるようにしようということが[議論されています](https://github.com/apple/swift/blob/master/docs/GenericsManifesto.md#generalized-existentials)。そのような、 `associatedtype` を持ったプロトコルで表される型は **_Generalized Existential_** と呼ばれています。 _Generalized Existential_ がサポートされた場合、上記のコードはコンパイル可能なコードとなります。
 
 そうは言っても、現状で _Generalized Existential_ はサポートされていません。しかし、これまで見てきたように、型としてのプロトコルが必要になるケースもあります。そのようなケースではどうすれば良いでしょうか。
 
