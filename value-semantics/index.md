@@ -125,7 +125,7 @@ a.bar.value = 3 // 👈
 
 <img src="img/reference-in-value.png" alt="参照型を保持する値型と状態の変更" style="width: 278px; max-width: 100%;" />
 
-そのため、 `Foo` は _値型_ であるにも関わらず変更に対する独立性を持たない、つまり _Value Semantics_ を持たないことになります。なお、 `a.value` と `b.value` は独立に変更できるので、この `Foo` は _Reference Type_ も持ちません。
+そのため、 `Foo` は _値型_ であるにも関わらず変更に対する独立性を持たない、つまり _Value Semantics_ を持たないことになります。なお、 `a.value` と `b.value` は独立に変更できるので、この `Foo` は _Reference Semantics_ も持ちません。
 
 この `Foo` のように _Value Semantics_ も _Reference Semantics_ も持たない型は扱いづらく、そのような型を作ってしまわないように注意が必要です。そんな変な型を作ることはないと思うかもしれませんが、たとえば下記に挙げたようなクラスのインスタンスを _値型_ のプロパティに持たせると、簡単に _Value Semantics_ も _Reference Semantics_ も持たない型ができあがってしまいます。
 
