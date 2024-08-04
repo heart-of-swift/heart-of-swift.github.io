@@ -89,7 +89,7 @@ _値型_ と異なり、 _参照型_ のインスタンスは変数に直接格�
 
 たとえば、 **_値型_ だけど _Value Semantics_ を持たない型** や、 **_参照型_ だけど _Value Semantics_ を持つ型も存在します**。 _Value Semantics_ ／ _Reference Semantics_ と、 _値型_ ／ _参照型_ をきちんと区別して考えることが重要です。
 
-## 値型だけど Value Semantics を持たない例
+### 値型だけど Value Semantics を持たない例
 
 Semantics と Type を区別して考えるために、値型だけれども _Value Semantics_ を持たない例を見てみましょう。
 
@@ -134,7 +134,7 @@ a.bar.value = 3 // 👈
 - `AVAudioPlayer`
 - `CMMotionManager`
 
-## 参照型プロパティを持つ値型でも Value Semantics を持つ例
+### 参照型プロパティを持つ値型でも Value Semantics を持つ例
 
 先の例は、一見 _参照型_ のプロパティを持ったことが _Value Semantics_ を失った原因のように思えます。しかし、 _参照型_ のプロパティを持つことで必ずしも _Value Semantics_ が失われるわけではありません。次は、 _参照型_ のプロパティを持つ _値型_ が _Value Semantics_ を持つ例を見てみます。
 
@@ -165,7 +165,7 @@ a.bar.value = 3 // ⛔
 - `UIImage`
 - `KeyPath`
 
-## イミュータビリティと Semantics
+### イミュータビリティと Semantics
 
 _イミュータブルクラス_ 自体の Semantics はどのように考えれば良いでしょうか。
 
@@ -195,7 +195,7 @@ struct Foo {
 }
 ```
 
-## ミュータブルな参照型をプロパティに持つけど Value Semantics を持つ例
+### ミュータブルな参照型をプロパティに持つけど Value Semantics を持つ例
 
 先程の例では、 _ミュータブル_ な _参照型_ のプロパティを持つ場合は _Value Semantics_ を持ちませんでした。
 
